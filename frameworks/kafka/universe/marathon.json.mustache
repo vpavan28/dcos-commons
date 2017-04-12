@@ -52,7 +52,7 @@
     {{/service.secret_name}}
 
     "CONFIG_TEMPLATE_PATH": "kafka-scheduler",
-    "KAFKA_VERSION_PATH": "kafka_2.11-0.10.1.0",
+    "KAFKA_VERSION_PATH": "kafka_confluent-3.2.0",
     "MESOS_ZOOKEEPER_URI": "master.mesos:2181",
 
     {{#kafka.kafka_advertise_host_ip}}
@@ -64,6 +64,13 @@
     "TASKCFG_ALL_KAFKA_REPLICA_FETCH_MIN_BYTES": "{{kafka.replica_fetch_min_bytes}}",
     "TASKCFG_ALL_KAFKA_CONTROLLED_SHUTDOWN_RETRY_BACKOFF_MS": "{{kafka.controlled_shutdown_retry_backoff_ms}}",
     "TASKCFG_ALL_KAFKA_LOG_FLUSH_OFFSET_CHECKPOINT_INTERVAL_MS": "{{kafka.log_flush_offset_checkpoint_interval_ms}}",
+    "TASKCFG_ALL_KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE": "{{kafka.confluent_support_metrics_enable}}",
+    "TASKCFG_ALL_KAFKA_CONFLUENT_SUPPORT_CUSTOMER_ID": "{{kafka.confluent_support_customer_id}}",
+    "TASKCFG_ALL_KAFKA_METRIC_REPORTERS": "{{kafka.confluent_metric_reporters}}",
+    "TASKCFG_ALL_KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS": "broker.{{service.name}}.l4lb.thisdcos.directory:9092",
+    "TASKCFG_ALL_KAFKA_CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT": "master.mesos:2181/dcos-service-{{service.name}}",
+    "TASKCFG_ALL_KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC": "{{kafka.confluent_metrics_reporter_topic}}",
+    "TASKCFG_ALL_KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS": "{{kafka.confluent_metrics_reporter_topic_replicas}}",
     "TASKCFG_ALL_KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS": "{{kafka.offsets_topic_num_partitions}}",
     "TASKCFG_ALL_KAFKA_MAX_CONNECTIONS_PER_IP_OVERRIDES": "{{kafka.max_connections_per_ip_overrides}}",
     "TASKCFG_ALL_KAFKA_LEADER_IMBALANCE_CHECK_INTERVAL_SECONDS": "{{kafka.leader_imbalance_check_interval_seconds}}",

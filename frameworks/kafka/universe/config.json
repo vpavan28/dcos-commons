@@ -6,9 +6,9 @@
         "description": "DC/OS service configuration properties",
         "properties":{
           "name" : {
-            "description":"Apache Kafka",
+            "description":"Confluent Kafka",
             "type":"string",
-            "default":"kafka"
+            "default":"confluent-kafka"
           },
           "mesos_api_version" : {
             "description":"Configures the Mesos API version to use. Possible values: V0 (non-HTTP), V1 (HTTP)",
@@ -23,7 +23,7 @@
           "principal": {
             "description": "The principal for the Kafka service instance.",
             "type": "string",
-            "default": "kafka-principal"
+            "default": "confluent-kafka-principal"
           },
           "secret_name": {
             "description": "Name of the Secret Store credentials to use for DC/OS service authentication. This should be left empty unless service authentication is needed.",
@@ -158,6 +158,36 @@
             "description":"The ratio of leader imbalance allowed per broker. The controller would trigger a leader balance if it goes above this value per broker. The value is specified in percentage.",
             "type":"integer",
             "default":10
+          },
+          "confluent_support_metrics_enable":{
+            "title":"confluent.support.metrics.enable",
+            "description":"Enable the Metrics feature to collect and report support metrics",
+            "type":"boolean",
+            "default":false
+          },
+          "confluent_support_customer_id":{
+            "title":"confluent.support.customer.id",
+            "description":"The customer ID under which support metrics will be collected and reported.   When set to 'anonymous', only a reduced set of metrics is collected and reported.",
+            "type":"string",
+            "default":"anonymous"
+          },
+          "confluent_metric_reporters":{
+            "title":"metric.reporters",
+            "description":"Enterprise java class to collect/report broker metrics",
+            "type":"string",
+            "default":"io.confluent.metrics.reporter.ConfluentMetricsReporter"
+          },
+          "confluent_metrics_reporter_topic":{
+            "title":"confluent.metrics.reporter.topic",
+            "description":"Internal metrics topic (DO NOT CHANGE)",
+            "type":"string",
+            "default":"_confluent-metrics"
+          },
+          "confluent_metrics_reporter_topic_replicas":{
+            "title":"confluent.metrics.reporter.topic.replicas",
+            "description":"Replication factor for the internal metrics topic",
+            "type":"integer",
+            "default":3
           },
           "log_flush_interval_messages":{
             "title":"log.flush.interval.messages",
