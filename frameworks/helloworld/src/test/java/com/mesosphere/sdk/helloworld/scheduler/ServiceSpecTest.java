@@ -62,5 +62,4 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
     public void testYmlWebUrl() throws Exception {
         testYaml("examples/web-url.yml");
     }
-    
 }
