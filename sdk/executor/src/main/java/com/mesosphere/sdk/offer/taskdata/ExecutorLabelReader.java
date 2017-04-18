@@ -14,14 +14,14 @@ import com.mesosphere.sdk.specification.GoalState;
 /**
  * Provides read access to task labels which are (only) read by the Executor.
  */
-public class ExecutorLabelReader extends LabelReader {
+public class ExecutorLabelReader extends TaskDataReader {
 
     private static final Set<String> VALID_GOAL_STATES = Arrays.stream(GoalState.values())
             .map(goalState -> goalState.name())
             .collect(Collectors.toSet());
 
     public ExecutorLabelReader(TaskInfo taskInfo) {
-        super(taskInfo);
+        super(taskInfo.getName(), "label", LabelUtils.toMap(taskInfo.getLabels()));
     }
 
     /**

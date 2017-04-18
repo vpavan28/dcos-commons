@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.mesosphere.sdk.offer.Constants.*;
@@ -23,7 +22,6 @@ import static com.mesosphere.sdk.offer.Constants.*;
  */
 public class TaskUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskUtils.class);
-    private static final Pattern ENVVAR_INVALID_CHARS = Pattern.compile("[^a-zA-Z0-9_]");
 
     private TaskUtils() {
         // do not instantiate
@@ -55,17 +53,6 @@ public class TaskUtils {
         return podInstance.getPod().getTasks().stream()
                 .map(taskSpec -> TaskSpec.getInstanceName(podInstance, taskSpec))
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Converts the provided string to a conventional environment variable name, consisting of numbers, uppercase
-     * letters, and underscores. Strictly speaking, lowercase characters are not invalid, but this avoids them to follow
-     * convention.
-     *
-     * For example: {@code hello.There999!} => {@code HELLO_THERE999_}
-     */
-    public static String toEnvName(String str) {
-        return ENVVAR_INVALID_CHARS.matcher(str.toUpperCase()).replaceAll("_");
     }
 
     /**

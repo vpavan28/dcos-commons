@@ -6,31 +6,31 @@ import java.util.UUID;
 import org.apache.mesos.Protos.Attribute;
 import org.apache.mesos.Protos.HealthCheck;
 import org.apache.mesos.Protos.Label;
+import org.apache.mesos.Protos.Labels;
 import org.apache.mesos.Protos.Offer;
 import org.apache.mesos.Protos.TaskInfo;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.mesosphere.sdk.offer.CommandUtils;
 import com.mesosphere.sdk.offer.TaskException;
 import com.mesosphere.sdk.specification.GoalState;
 
 /**
  * Provides write access to task labels which are (only) written by the Scheduler.
  */
-public class SchedulerLabelWriter extends LabelWriter {
+public class SchedulerLabelWriter extends TaskDataWriter {
 
     /**
-     * @see LabelWriter#LabelWriter(TaskInfo)
+     * @see TaskDataWriter#TaskDataWriter(java.util.Map)
      */
     public SchedulerLabelWriter(TaskInfo taskInfo) {
-        super(taskInfo);
+        super(LabelUtils.toMap(taskInfo.getLabels()));
     }
 
     /**
-     * @see LabelWriter#LabelWriter(org.apache.mesos.Protos.TaskInfo.Builder)
+     * @see TaskDataWriter#TaskDataWriter(java.util.Map)
      */
     public SchedulerLabelWriter(TaskInfo.Builder taskInfoBuilder) {
-        super(taskInfoBuilder);
+        super(LabelUtils.toMap(taskInfoBuilder.getLabels()));
     }
 
     /**
@@ -136,5 +136,12 @@ public class SchedulerLabelWriter extends LabelWriter {
         return (encodedReadinessCheck.isPresent())
                 ? Optional.of(LabelUtils.decodeHealthCheck(encodedReadinessCheck.get()))
                 : Optional.empty();
+    }
+
+    /**
+     * Returns a Protobuf representation of all contained entries.
+     */
+    public Labels toProto() {
+        return LabelUtils.toProto(map());
     }
 }

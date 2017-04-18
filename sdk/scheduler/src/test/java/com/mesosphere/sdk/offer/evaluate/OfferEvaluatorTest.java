@@ -53,7 +53,7 @@ public class OfferEvaluatorTest extends OfferEvaluatorTestBase {
         Assert.assertEquals("resource_id", resourceIdLabel.getKey());
 
         CommandInfo command = TaskPacking.unpack(taskInfo).getCommand();
-        Map<String, String> envvars = CommonTaskUtils.fromEnvironmentToMap(command.getEnvironment());
+        Map<String, String> envvars = CommonIdUtils.fromEnvironmentToMap(command.getEnvironment());
         Assert.assertEquals(envvars.toString(), 1, envvars.size());
         Assert.assertEquals(String.valueOf(555), envvars.get(TestConstants.PORT_ENV_NAME));
     }
@@ -83,7 +83,7 @@ public class OfferEvaluatorTest extends OfferEvaluatorTestBase {
         Assert.assertEquals("resource_id", resourceIdLabel.getKey());
 
         CommandInfo command = TaskPacking.unpack(taskInfo).getCommand();
-        Map<String, String> envvars = CommonTaskUtils.fromEnvironmentToMap(command.getEnvironment());
+        Map<String, String> envvars = CommonIdUtils.fromEnvironmentToMap(command.getEnvironment());
         Assert.assertEquals(envvars.toString(), 1, envvars.size());
         Assert.assertEquals(String.valueOf(666), envvars.get(TestConstants.PORT_ENV_NAME));
     }
@@ -116,7 +116,7 @@ public class OfferEvaluatorTest extends OfferEvaluatorTestBase {
         Assert.assertEquals("resource_id", resourceIdLabel.getKey());
 
         CommandInfo command = TaskPacking.unpack(taskInfo).getCommand();
-        Map<String, String> envvars = CommonTaskUtils.fromEnvironmentToMap(command.getEnvironment());
+        Map<String, String> envvars = CommonIdUtils.fromEnvironmentToMap(command.getEnvironment());
         Assert.assertEquals(envvars.toString(), 1, envvars.size());
         Assert.assertEquals(String.valueOf(666), envvars.get(TestConstants.PORT_ENV_NAME));
     }
@@ -139,7 +139,7 @@ public class OfferEvaluatorTest extends OfferEvaluatorTestBase {
         Assert.assertEquals("resource_id", resourceIdLabel.getKey());
 
         CommandInfo command = TaskPacking.unpack(taskInfo).getCommand();
-        Map<String, String> envvars = CommonTaskUtils.fromEnvironmentToMap(command.getEnvironment());
+        Map<String, String> envvars = CommonIdUtils.fromEnvironmentToMap(command.getEnvironment());
         Assert.assertEquals(envvars.toString(), 1, envvars.size());
         Assert.assertEquals(String.valueOf(10000), envvars.get(TestConstants.PORT_ENV_NAME));
     }
@@ -250,7 +250,7 @@ public class OfferEvaluatorTest extends OfferEvaluatorTestBase {
                 resourceIdLabel.getValue(), fulfilledPortResource.getReservation().getLabels().getLabels(0).getValue());
 
         CommandInfo command = TaskPacking.unpack(taskInfo).getCommand();
-        Map<String, String> envvars = CommonTaskUtils.fromEnvironmentToMap(command.getEnvironment());
+        Map<String, String> envvars = CommonIdUtils.fromEnvironmentToMap(command.getEnvironment());
         Assert.assertEquals(envvars.toString(), 2, envvars.size());
         Assert.assertEquals(String.valueOf(10000), envvars.get(TestConstants.PORT_ENV_NAME));
         Assert.assertEquals(String.valueOf(10001), envvars.get(TestConstants.PORT_ENV_NAME + "1"));

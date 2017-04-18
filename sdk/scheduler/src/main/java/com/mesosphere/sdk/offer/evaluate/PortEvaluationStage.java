@@ -1,6 +1,10 @@
 package com.mesosphere.sdk.offer.evaluate;
 
 import com.mesosphere.sdk.offer.*;
+import com.mesosphere.sdk.offer.taskdata.SchedulerEnvReader;
+import com.mesosphere.sdk.offer.taskdata.SchedulerExecutorEnvWriter;
+import com.mesosphere.sdk.offer.taskdata.SchedulerTaskEnvWriter;
+import com.mesosphere.sdk.offer.taskdata.SchedulerLabelReader;
 import com.mesosphere.sdk.offer.taskdata.SchedulerLabelWriter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -41,10 +45,10 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
     @Override
     public EvaluationOutcome evaluate(MesosResourcePool mesosResourcePool, PodInfoBuilder podInfoBuilder) {
         // If this is from an existing pod with the dynamic port already assigned and reserved, just keep it.
-        Protos.CommandInfo commandInfo = getTaskName().isPresent() ?
-                podInfoBuilder.getTaskBuilder(getTaskName().get()).getCommand() :
-                podInfoBuilder.getExecutorBuilder().get().getCommand();
-        Optional<String> taskPort = CommandUtils.getEnvVar(commandInfo, getPortEnvironmentVariable());
+        SchedulerEnvReader envReader = getTaskName().isPresent() ?
+                new SchedulerEnvReader(podInfoBuilder.getTaskBuilder(getTaskName().get())) :
+                new SchedulerEnvReader(podInfoBuilder.getExecutorBuilder().get());
+        Optional<String> taskPort = envReader.getPort(portName, customEnvKey);
         int assignedPort = port;
 
         if (assignedPort == 0 && taskPort.isPresent()) {
@@ -86,10 +90,13 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
         if (getTaskName().isPresent()) {
             String taskName = getTaskName().get();
             Protos.TaskInfo.Builder taskBuilder = podInfoBuilder.getTaskBuilder(taskName);
+            taskBuilder.setCommand(new SchedulerTaskEnvWriter(taskBuilder).setPort(portName, customEnvKey, port).toProto());
             setPortEnvironmentVariable(taskBuilder.getCommandBuilder(), port);
 
             // Add port to the health check (if defined)
             if (taskBuilder.hasHealthCheck()) {
+                taskBuilder.getHealthCheckBuilder().setCommand(
+                        new SchedulerTaskEnvWriter(taskBuilder.getHealthCheck()).setPort(portName, customEnvKey, port).toProto());
                 setPortEnvironmentVariable(taskBuilder.getHealthCheckBuilder().getCommandBuilder(), port);
             } else {
                 LOGGER.info("Health check is not defined for task: {}", taskName);
@@ -98,7 +105,7 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
             // Add port to the readiness check (if a readiness check is defined)
             try {
                 taskBuilder.setLabels(new SchedulerLabelWriter(taskBuilder)
-                        .setReadinessCheckEnvvar(getPortEnvironmentVariable(), Long.toString(port))
+                        .setReadinessCheckPortEnvvar(portName, customEnvKey, Long.toString(port))
                         .toProto());
             } catch (TaskException e) {
                 LOGGER.error("Got exception while adding PORT env var to ReadinessCheck", e);
@@ -106,7 +113,9 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
             resourceBuilder = ResourceUtils.getResourceBuilder(taskBuilder, resource);
         } else {
             Protos.ExecutorInfo.Builder executorBuilder = podInfoBuilder.getExecutorBuilder().get();
-            setPortEnvironmentVariable(executorBuilder.getCommandBuilder(), port);
+            executorBuilder.getCommandBuilder().setEnvironment(new SchedulerExecutorEnvWriter(executorBuilder)
+                    .setPortEnvvar(portName, customEnvKey, port)
+                    .toProto());
             resourceBuilder = ResourceUtils.getResourceBuilder(executorBuilder, resource);
         }
 
@@ -157,22 +166,6 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
         }
 
         return dynamicPort;
-    }
-
-    private void setPortEnvironmentVariable(Protos.CommandInfo.Builder commandInfoBuilder, long port) {
-        CommandUtils.setEnvVar(commandInfoBuilder, getPortEnvironmentVariable(), Long.toString(port));
-    }
-
-    /**
-     * Returns a environment variable-style rendering of the provided {@code envKey}.
-     * Invalid characters are replaced with underscores.
-     */
-    private String getPortEnvironmentVariable() {
-        String draftEnvName = customEnvKey.isPresent()
-                ? customEnvKey.get() // use custom name as-is
-                : Constants.PORT_NAME_TASKENV_PREFIX + portName; // PORT_[name]
-        // Envvar should be uppercased with invalid characters replaced with underscores:
-        return TaskUtils.toEnvName(draftEnvName);
     }
 
     private static ResourceRequirement getPortRequirement(ResourceRequirement resourceRequirement, int port) {

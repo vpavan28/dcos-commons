@@ -2,7 +2,6 @@ package com.mesosphere.sdk.hdfs.scheduler;
 
 import com.mesosphere.sdk.api.types.EndpointProducer;
 import com.mesosphere.sdk.config.DefaultTaskConfigRouter;
-import com.mesosphere.sdk.offer.Constants;
 import com.mesosphere.sdk.offer.evaluate.placement.AndRule;
 import com.mesosphere.sdk.offer.evaluate.placement.TaskTypeRule;
 import com.mesosphere.sdk.scheduler.DefaultScheduler;
@@ -74,8 +73,6 @@ public class Main {
         }
 
         Map<String, String> env = new HashMap<>(new DefaultTaskConfigRouter().getConfig("ALL").getAllEnv());
-        env.put(Constants.FRAMEWORK_NAME_TASKENV, System.getenv(Constants.FRAMEWORK_NAME_TASKENV));
-
         String fileStr = new String(bytes, Charset.defaultCharset());
         return TemplateUtils.applyEnvToMustache(fileStr, env);
     }

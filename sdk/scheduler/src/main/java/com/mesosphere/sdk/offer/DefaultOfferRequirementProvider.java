@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.mesosphere.sdk.offer.Constants.*;
-
 /**
  * A default implementation of the OfferRequirementProvider interface.
  */
@@ -248,8 +246,8 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
             Collection<Protos.Resource> resources) throws InvalidRequirementException {
         Protos.TaskInfo.Builder taskInfoBuilder = Protos.TaskInfo.newBuilder()
                 .setName(TaskSpec.getInstanceName(podInstance, taskSpec))
-                .setTaskId(CommonTaskUtils.emptyTaskId())
-                .setSlaveId(CommonTaskUtils.emptyAgentId())
+                .setTaskId(CommonIdUtils.emptyTaskId())
+                .setSlaveId(CommonIdUtils.emptyAgentId())
                 .addAllResources(resources);
 
         // create default labels:
@@ -311,8 +309,8 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
                 .clearExecutor()
                 .addAllResources(getUpdatedResources(otherResources, taskSpec))
                 .addAllResources(diskResources)
-                .setTaskId(CommonTaskUtils.emptyTaskId())
-                .setSlaveId(CommonTaskUtils.emptyAgentId())
+                .setTaskId(CommonIdUtils.emptyTaskId())
+                .setSlaveId(CommonIdUtils.emptyAgentId())
                 .setLabels(new SchedulerLabelWriter(taskInfo)
                         .setTargetConfiguration(targetConfigurationId)
                         .clearTransient()
@@ -398,19 +396,19 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
         // Inject TASK_NAME as KEY for conditional mustache templating
         environment.put(TaskSpec.getInstanceName(podInstance, taskSpec), "true");
 
-        return CommonTaskUtils.fromMapToEnvironment(environment).build();
+        return CommonIdUtils.fromMapToEnvironment(environment).build();
     }
 
     private static Protos.Environment.Builder mergeEnvironments(
             Protos.Environment primary, Protos.Environment secondary) {
-        Map<String, String> primaryVariables = CommonTaskUtils.fromEnvironmentToMap(primary);
-        for (Map.Entry<String, String> secondaryEntry : CommonTaskUtils.fromEnvironmentToMap(secondary).entrySet()) {
+        Map<String, String> primaryVariables = CommonIdUtils.fromEnvironmentToMap(primary);
+        for (Map.Entry<String, String> secondaryEntry : CommonIdUtils.fromEnvironmentToMap(secondary).entrySet()) {
             if (!primaryVariables.containsKey(secondaryEntry.getKey())) {
                 primaryVariables.put(secondaryEntry.getKey(), secondaryEntry.getValue());
             }
         }
 
-        return CommonTaskUtils.fromMapToEnvironment(primaryVariables);
+        return CommonIdUtils.fromMapToEnvironment(primaryVariables);
     }
 
     private static void validateTaskRequirements(List<TaskRequirement> taskRequirements)

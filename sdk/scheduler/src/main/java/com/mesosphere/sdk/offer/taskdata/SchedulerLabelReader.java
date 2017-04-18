@@ -16,20 +16,20 @@ import com.mesosphere.sdk.offer.TaskException;
 /**
  * Provides read access to task labels which are (only) read by the Scheduler.
  */
-public class SchedulerLabelReader extends LabelReader {
+public class SchedulerLabelReader extends TaskDataReader {
 
     /**
-     * @see LabelReader#LabelReader(TaskInfo)
+     * @see TaskDataReader#TaskDataReader(String, String, java.util.Map)
      */
     public SchedulerLabelReader(TaskInfo taskInfo) {
-        super(taskInfo);
+        super(taskInfo.getName(), "label", LabelUtils.toMap(taskInfo.getLabels()));
     }
 
     /**
-     * @see LabelReader#LabelReader(org.apache.mesos.Protos.TaskInfo.Builder)
+     * @see TaskDataReader#TaskDataReader(String, String, java.util.Map)
      */
     public SchedulerLabelReader(TaskInfo.Builder taskInfoBuilder) {
-        super(taskInfoBuilder);
+        super(taskInfoBuilder.getName(), "label", LabelUtils.toMap(taskInfoBuilder.getLabels()));
     }
 
     /**

@@ -1,8 +1,9 @@
 package com.mesosphere.sdk.offer.evaluate;
 
-import com.mesosphere.sdk.executor.ExecutorIdUtils;
 import com.mesosphere.sdk.offer.MesosResourcePool;
 import com.mesosphere.sdk.offer.OfferRequirement;
+import com.mesosphere.sdk.offer.CommonIdUtils;
+
 import org.apache.mesos.Protos;
 
 import static com.mesosphere.sdk.offer.evaluate.EvaluationOutcome.*;
@@ -50,7 +51,7 @@ public class ExecutorEvaluationStage implements OfferEvaluationStage {
         if (executorId != null) {
             newExecutorId = executorId;
         } else {
-            newExecutorId = ExecutorIdUtils.toExecutorId(executorBuilder.getName());
+            newExecutorId = CommonIdUtils.toExecutorId(executorBuilder.getName());
         }
         executorBuilder.setExecutorId(newExecutorId);
         return pass(this, "Offer contains the matching Executor ID");
