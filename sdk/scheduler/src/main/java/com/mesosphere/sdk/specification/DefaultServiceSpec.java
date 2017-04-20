@@ -284,6 +284,7 @@ public class DefaultServiceSpec implements ServiceSpec {
                 AttributeRule.class,
                 DefaultResourceSpec.class,
                 DefaultVolumeSpec.class,
+                DockerVolumeSpec.class,
                 ExactMatcher.class,
                 HostnameRule.class,
                 MaxPerAttributeRule.class,

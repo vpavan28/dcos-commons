@@ -424,6 +424,9 @@ public class YAMLToInternalMappers {
             for (RawVolume rawVolume : rawVolumes.values()) {
                 resourceSetBuilder.addVolume(
                         rawVolume.getType(),
+                        rawVolume.getDockerVolumeName(),
+                        rawVolume.getDockerDriverName(),
+                        rawVolume.getDockerDriverOptions(),
                         Double.valueOf(rawVolume.getSize()),
                         rawVolume.getPath());
             }
@@ -431,6 +434,9 @@ public class YAMLToInternalMappers {
         if (rawSingleVolume != null) {
             resourceSetBuilder.addVolume(
                     rawSingleVolume.getType(),
+                    rawSingleVolume.getDockerVolumeName(),
+                    rawSingleVolume.getDockerDriverName(),
+                    rawSingleVolume.getDockerDriverOptions(),
                     Double.valueOf(rawSingleVolume.getSize()),
                     rawSingleVolume.getPath());
         }
@@ -468,7 +474,7 @@ public class YAMLToInternalMappers {
                 filePath);
     }
 
-    private static DefaultVolumeSpec convertVolume(
+    private static VolumeSpec convertVolume(
             RawVolume rawVolume, String role, String preReservedRole, String principal) {
         VolumeSpec.Type volumeTypeEnum;
         try {
@@ -479,8 +485,26 @@ public class YAMLToInternalMappers {
                     rawVolume.getType(), rawVolume.getPath(), Arrays.asList(VolumeSpec.Type.values())));
         }
 
-        return new DefaultVolumeSpec(
-                rawVolume.getSize(), volumeTypeEnum, rawVolume.getPath(), role, preReservedRole, principal);
+        if (volumeTypeEnum == VolumeSpec.Type.DOCKER) {
+            return new DockerVolumeSpec(
+                    rawVolume.getSize(),
+                    volumeTypeEnum,
+                    rawVolume.getDockerVolumeName(),
+                    rawVolume.getDockerDriverName(),
+                    rawVolume.getDockerDriverOptions(),
+                    rawVolume.getPath(),
+                    role,
+                    preReservedRole,
+                    principal);
+        } else {
+            return new DefaultVolumeSpec(
+                    rawVolume.getSize(),
+                    volumeTypeEnum,
+                    rawVolume.getPath(),
+                    role,
+                    preReservedRole,
+                    principal);
+        }
     }
 
     private static DefaultNetworkSpec convertNetwork(
