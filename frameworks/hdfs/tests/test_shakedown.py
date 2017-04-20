@@ -123,7 +123,6 @@ def test_kill_scheduler():
 @pytest.mark.recovery
 def test_kill_all_journalnodes():
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
-    name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     for host in shakedown.get_service_ips(PACKAGE_NAME):
@@ -131,7 +130,7 @@ def test_kill_all_journalnodes():
 
     check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'journal', journal_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'name', name_ids)
+
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
 
 
