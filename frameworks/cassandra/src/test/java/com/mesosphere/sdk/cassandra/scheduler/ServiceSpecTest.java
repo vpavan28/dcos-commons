@@ -36,6 +36,7 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("CASSANDRA_HEAP_GC", "CMS");
         ENV_VARS.set("CASSANDRA_DISK_MB", "5000");
         ENV_VARS.set("CASSANDRA_DISK_TYPE", "ROOT");
+        ENV_VARS.set("CASSANDRA_DOCKER_VOLUME_NAME", "CassandraVolume");
         URL resource = DefaultService.class.getClassLoader().getResource("svc.yml");
         ENV_VARS.set("CONFIG_TEMPLATE_PATH", new File(resource.getPath()).getParent());
     }

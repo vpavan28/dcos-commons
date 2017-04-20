@@ -1,14 +1,12 @@
 {
   "packagingVersion": "2.0",
-  "name": "cassandra",
+  "name": "cassandra-px",
   "version": "{{package-version}}",
   "maintainer": "support@mesosphere.io",
-  "description": "An example implementation of a stateful service using the DC/OS SDK",
+  "description": "Cassandra using the DC/OS SDK backed by Portworx volumes",
   "selected": false,
   "framework": true,
   "tags": [
-    "example",
-    "reference",
     "cassandra"
   ],
   "preInstallNotes": "This DC/OS Service is currently in preview.",
