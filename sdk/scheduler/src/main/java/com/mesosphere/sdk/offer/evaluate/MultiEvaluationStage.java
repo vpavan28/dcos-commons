@@ -7,9 +7,7 @@ import com.mesosphere.sdk.offer.ResourceUtils;
 import org.apache.mesos.Protos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,26 +27,22 @@ public class MultiEvaluationStage implements OfferEvaluationStage {
         boolean allPassing = true;
         for (OfferEvaluationStage child : childEvaluationStages) {
             EvaluationOutcome originalOutcome = child.evaluate(mesosResourcePool, podInfoBuilder);
-            childOutcomes.add(EvaluationOutcome.create(
-                    originalOutcome.isPassing(),
-                    child,
-                    Collections.emptyList(), // omit recommendation: don't duplicate our coalesced version
-                    Collections.emptyList(),
-                    originalOutcome.getReason()));
+            // omit OfferRecommendation in child outcomes: don't duplicate our coalesced version
+            childOutcomes.add(
+                    EvaluationOutcome.create(originalOutcome.isPassing(), child, originalOutcome.getReason()));
             recommendations.addAll(originalOutcome.getOfferRecommendations());
             if (!originalOutcome.isPassing()) {
                 allPassing = false;
             }
         }
 
-        return EvaluationOutcome.create(
-                allPassing,
-                this,
-                recommendations.isEmpty()
-                        ? Collections.emptyList()
-                        : Arrays.asList(coalesceRangeRecommendations(recommendations)),
-                childOutcomes,
-                allPassing ? "All child stages passed" : "Failed to pass all child stages");
+        EvaluationOutcome outcome = EvaluationOutcome.create(
+                allPassing, this, allPassing ? "All child stages passed" : "Failed to pass all child stages")
+                .setChildren(childOutcomes);
+        if (!recommendations.isEmpty()) {
+            outcome.setOfferRecommendation(coalesceRangeRecommendations(recommendations));
+        }
+        return outcome;
     }
 
     private static OfferRecommendation coalesceRangeRecommendations(Collection<OfferRecommendation> recommendations) {

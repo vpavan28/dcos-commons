@@ -6,7 +6,6 @@ import com.mesosphere.sdk.offer.MesosResource;
 import com.mesosphere.sdk.offer.TaskException;
 import com.mesosphere.sdk.offer.TaskUtils;
 import com.mesosphere.sdk.offer.taskdata.SchedulerLabelReader;
-import com.mesosphere.sdk.specification.PodInstance;
 import com.mesosphere.sdk.specification.ServiceSpec;
 import com.mesosphere.sdk.specification.TaskSpec;
 import com.mesosphere.sdk.storage.StorageError.Reason;
@@ -20,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Utilities for implementations and users of {@link StateStore}.
@@ -160,50 +158,6 @@ public class StateStoreUtils {
         }
 
         return reservedResources;
-    }
-
-    public static Collection<Protos.Resource> getResources(
-            StateStore stateStore,
-            PodInstance podInstance,
-            TaskSpec taskSpec) {
-        String resourceSetName = taskSpec.getResourceSet().getId();
-
-        Collection<String> tasksWithResourceSet = podInstance.getPod().getTasks().stream()
-                .filter(taskSpec1 -> resourceSetName.equals(taskSpec1.getResourceSet().getId()))
-                .map(taskSpec1 -> TaskSpec.getInstanceName(podInstance, taskSpec1))
-                .distinct()
-                .collect(Collectors.toList());
-
-        LOGGER.info("Tasks with resource set: {}, {}", resourceSetName, tasksWithResourceSet);
-
-        Collection<TaskInfo> taskInfosForPod = stateStore.fetchTasks().stream()
-                .filter(taskInfo -> {
-                    try {
-                        return TaskUtils.isSamePodInstance(taskInfo, podInstance);
-                    } catch (TaskException e) {
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList());
-
-        LOGGER.info("Tasks for pod: {}",
-                taskInfosForPod.stream()
-                        .map(taskInfo -> taskInfo.getName())
-                        .collect(Collectors.toList()));
-
-        Optional<TaskInfo> taskInfoOptional = taskInfosForPod.stream()
-                .filter(taskInfo -> tasksWithResourceSet.contains(taskInfo.getName()))
-                .findFirst();
-
-        if (taskInfoOptional.isPresent()) {
-            LOGGER.info("Found Task with resource set: {}, {}",
-                    resourceSetName,
-                    TextFormat.shortDebugString(taskInfoOptional.get()));
-            return taskInfoOptional.get().getResourcesList();
-        } else {
-            LOGGER.error("Failed to find a Task with resource set: {}", resourceSetName);
-            return Collections.emptyList();
-        }
     }
 
     /**

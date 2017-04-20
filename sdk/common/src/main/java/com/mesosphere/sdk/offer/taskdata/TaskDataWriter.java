@@ -36,23 +36,33 @@ public class TaskDataWriter {
     }
 
     /**
+     * Returns a read-only copy of all contained entries.
+     */
+    protected ImmutableMap<String, String> map() {
+        return ImmutableMap.copyOf(map);
+    }
+
+    /**
      * Sets the provided value, overwriting any previous value.
      */
-    protected void put(String key, String val) {
+    protected TaskDataWriter put(String key, String val) {
         map.put(key, val);
+        return this;
+    }
+
+    /**
+     * Sets all of the provided values, overwriting any previous values.
+     */
+    protected TaskDataWriter putAll(Map<String, String> other) {
+        map.putAll(other);
+        return this;
     }
 
     /**
      * Removes the provided value, or does nothing if it was already not present.
      */
-    protected void remove(String key) {
+    protected TaskDataWriter remove(String key) {
         map.remove(key);
-    }
-
-    /**
-     * Returns a read-only copy of all contained entries.
-     */
-    protected ImmutableMap<String, String> map() {
-        return ImmutableMap.copyOf(map);
+        return this;
     }
 }

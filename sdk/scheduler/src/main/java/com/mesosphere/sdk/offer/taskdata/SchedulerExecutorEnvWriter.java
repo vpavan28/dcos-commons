@@ -24,7 +24,7 @@ public class SchedulerExecutorEnvWriter extends TaskDataWriter {
         super(EnvUtils.toMap(executorInfoBuilder.getCommand().getEnvironment()));
     }
 
-    public SchedulerExecutorEnvWriter setPortEnvvar(String portName, Optional<String> customEnvKey, long port) {
+    public SchedulerExecutorEnvWriter setPort(String portName, Optional<String> customEnvKey, long port) {
         put(EnvUtils.getPortEnvironmentVariable(portName, customEnvKey), Long.toString(port));
         return this;
     }

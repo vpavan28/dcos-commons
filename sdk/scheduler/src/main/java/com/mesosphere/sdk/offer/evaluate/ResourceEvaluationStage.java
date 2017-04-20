@@ -8,8 +8,6 @@ import org.apache.mesos.Protos.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -149,12 +147,14 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
 
         setProtos(podInfoBuilder, fulfilledResource);
 
-        return pass(
-                this,
-                offerRecommendation == null ? Collections.emptyList() : Arrays.asList(offerRecommendation),
+        EvaluationOutcome outcome = pass(this,
                 "Offer contains sufficient '%s': requirement=%s",
                 resourceRequirement.getName(),
                 TextFormat.shortDebugString(resourceRequirement.getValue()));
+        if (offerRecommendation != null) {
+            outcome.setOfferRecommendation(offerRecommendation);
+        }
+        return outcome;
     }
 
     protected EvaluationOutcome validateRequirements(OfferRequirement offerRequirement) {

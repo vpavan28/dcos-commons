@@ -5,7 +5,6 @@ import com.mesosphere.sdk.offer.taskdata.SchedulerLabelWriter;
 
 import org.apache.mesos.Protos;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static com.mesosphere.sdk.offer.evaluate.EvaluationOutcome.*;
@@ -38,9 +37,7 @@ public class LaunchEvaluationStage implements OfferEvaluationStage {
             taskBuilder.setExecutor(executorBuilder.get());
         }
 
-        return pass(
-                this,
-                Arrays.asList(new LaunchOfferRecommendation(offer, taskBuilder.build())),
-                "Added launch information to offer requirement");
+        return pass(this, "Added launch information to offer requirement")
+                .setOfferRecommendation(new LaunchOfferRecommendation(offer, taskBuilder.build()));
     }
 }

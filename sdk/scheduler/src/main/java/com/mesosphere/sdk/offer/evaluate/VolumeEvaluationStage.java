@@ -66,10 +66,10 @@ public class VolumeEvaluationStage extends ResourceEvaluationStage implements Of
 
         setProtos(podInfoBuilder, fulfilledResource);
 
-        return pass(this, offerRecommendations,
+        return pass(this,
                 "Satisfied requirements for %s volume '%s'",
-                getVolumeType(),
-                resourceRequirement.getResource().getDisk().getVolume().getContainerPath());
+                getVolumeType(), resourceRequirement.getResource().getDisk().getVolume().getContainerPath())
+                .setOfferRecommendations(offerRecommendations);
     }
 
     @Override

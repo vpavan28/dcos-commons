@@ -41,6 +41,7 @@ public class ReservationEvaluationStage implements OfferEvaluationStage {
                 recommendations.add(new UnreserveOfferRecommendation(mesosResourcePool.getOffer(), unreserveResource));
             }
         }
-        return pass(this, recommendations, "Added reservation information to offer requirement");
+        return pass(this, "Added reservation information to offer requirement")
+                .setOfferRecommendations(recommendations);
     }
 }

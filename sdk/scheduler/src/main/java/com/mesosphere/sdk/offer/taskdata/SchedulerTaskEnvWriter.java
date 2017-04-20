@@ -1,71 +1,87 @@
 package com.mesosphere.sdk.offer.taskdata;
 
+import java.util.Map;
 import java.util.Optional;
 
-import org.apache.mesos.Protos.CommandInfo;
-import org.apache.mesos.Protos.HealthCheck;
-import org.apache.mesos.Protos.TaskInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.mesos.Protos.Environment;
 
-import com.mesosphere.sdk.offer.TaskException;
+import com.mesosphere.sdk.specification.CommandSpec;
+import com.mesosphere.sdk.specification.ConfigFileSpec;
+import com.mesosphere.sdk.specification.PodInstance;
+import com.mesosphere.sdk.specification.TaskSpec;
 
 /**
  * Provides write access to task environment variables which are (only) written by the Scheduler.
  */
 public class SchedulerTaskEnvWriter {
+    private final TaskDataWriter taskAndHealthCheckEnv;
+    private final TaskDataWriter taskOnlyEnv;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerTaskEnvWriter.class);
-
-    private final TaskDataWriter taskEnv;
-    private final Optional<TaskDataWriter> healthCheckEnv;
-
-    /**
-     * @see TaskDataWriter#TaskDataWriter(java.util.Map)
-     */
-    public SchedulerTaskEnvWriter(TaskInfo taskInfo) {
-        this(
-                taskInfo.getCommand(),
-                taskInfo.hasHealthCheck() ? Optional.of(taskInfo.getHealthCheck()) : Optional.empty());
+    public SchedulerTaskEnvWriter() {
+        this.taskAndHealthCheckEnv = new TaskDataWriter();
+        this.taskOnlyEnv = new TaskDataWriter();
     }
 
-    /**
-     * @see TaskDataWriter#TaskDataWriter(java.util.Map)
-     */
-    public SchedulerTaskEnvWriter(TaskInfo.Builder taskInfoBuilder) {
-        this(
-                taskInfoBuilder.getCommand(),
-                taskInfoBuilder.hasHealthCheck() ? Optional.of(taskInfoBuilder.getHealthCheck()) : Optional.empty());
+    public SchedulerTaskEnvWriter setPort(String portName, Optional<String> customEnvKey, long port) {
+        taskAndHealthCheckEnv.put(EnvUtils.getPortEnvironmentVariable(portName, customEnvKey), Long.toString(port));
+        return this;
     }
 
-    private SchedulerTaskEnvWriter(CommandInfo taskCmd, Optional<HealthCheck> healthCheck) {
-        taskEnv = new TaskDataWriter(EnvUtils.toMap(taskCmd.getEnvironment()));
-        if (healthCheck.isPresent()) {
-            healthCheckEnv = Optional.of(new TaskDataWriter(
-                    EnvUtils.toMap(healthCheck.get().getCommand().getEnvironment())));
-        } else {
-            healthCheckEnv = Optional.empty();
+    public SchedulerTaskEnvWriter setEnv(
+            String serviceName,
+            PodInstance podInstance,
+            TaskSpec taskSpec,
+            CommandSpec commandSpec,
+            String configDownloadDir,
+            Map<String, String> planParameters) {
+
+        // Task envvars from either of the following sources:
+        // - ServiceSpec (provided by developer)
+        // - TASKCFG_<podname>_* (provided by user, handled when parsing YAML, potentially overrides ServiceSpec)
+        taskAndHealthCheckEnv.putAll(commandSpec.getEnvironment());
+
+        // Default envvars for use by executors/developers:
+
+        // Inject Pod Instance Index
+        taskAndHealthCheckEnv.put(EnvConstants.POD_INSTANCE_INDEX_TASKENV, String.valueOf(podInstance.getIndex()));
+        // Inject Framework Name
+        taskAndHealthCheckEnv.put(EnvConstants.FRAMEWORK_NAME_TASKENV, serviceName);
+        // Inject TASK_NAME as KEY:VALUE
+        taskAndHealthCheckEnv.put(EnvConstants.TASK_NAME_TASKENV, TaskSpec.getInstanceName(podInstance, taskSpec));
+        // Inject TASK_NAME as KEY for conditional mustache templating
+        taskAndHealthCheckEnv.put(TaskSpec.getInstanceName(podInstance, taskSpec), "true");
+
+        if (taskSpec.getConfigFiles() != null) {
+            for (ConfigFileSpec configSpec : taskSpec.getConfigFiles()) {
+                // Comma-separated components in the env value:
+                // 1. where the template file was downloaded (by the mesos fetcher)
+                // 2. where the rendered result should go
+                String configEnvVal =
+                        String.format("%s%s,%s", configDownloadDir, configSpec.getName(), configSpec.getRelativePath());
+                taskOnlyEnv.put(
+                        EnvConstants.CONFIG_TEMPLATE_TASKENV_PREFIX + EnvUtils.toEnvName(configSpec.getName()),
+                        configEnvVal);
+            }
         }
+
+        setParameters(planParameters);
+
+        return this;
     }
 
-    public SchedulerTaskEnvWriter setPortEnvvar(String portName, Optional<String> customEnvKey, long port) {
-        taskBuilder.setCommand(new SchedulerTaskEnvWriter(taskBuilder).setPort(portName, customEnvKey, port).toProto());
-        setPortEnvironmentVariable(taskBuilder.getCommandBuilder(), port);
+    public SchedulerTaskEnvWriter setParameters(Map<String, String> planParameters) {
+        taskOnlyEnv.putAll(planParameters);
+        return this;
+    }
 
-        // Add port to the health check (if defined)
-        if (healthCheckEnv.isPresent()) {
-            healthCheckEnv.get().put(EnvUtils.getPortEnvironmentVariable(portName, customEnvKey), Long.toString(port));
-        }
+    public Environment getTaskEnv() {
+        return EnvUtils.toProto(new TaskDataWriter()
+                .putAll(taskOnlyEnv.map())
+                .putAll(taskAndHealthCheckEnv.map())
+                .map());
+    }
 
-        // Add port to the readiness check (if a readiness check is defined)
-        try {
-            taskBuilder.setLabels(new SchedulerLabelWriter(taskBuilder)
-                    .setReadinessCheckPortEnvvar(portName, customEnvKey, Long.toString(port))
-                    .toProto());
-        } catch (TaskException e) {
-            LOGGER.error("Got exception while adding PORT env var to ReadinessCheck", e);
-        }
-
-        return this; // TODO
+    public Environment getHealthCheckEnv() {
+        return EnvUtils.toProto(taskAndHealthCheckEnv.map());
     }
 }

@@ -4,8 +4,6 @@ import com.mesosphere.sdk.offer.*;
 import com.mesosphere.sdk.offer.taskdata.SchedulerEnvReader;
 import com.mesosphere.sdk.offer.taskdata.SchedulerExecutorEnvWriter;
 import com.mesosphere.sdk.offer.taskdata.SchedulerTaskEnvWriter;
-import com.mesosphere.sdk.offer.taskdata.SchedulerLabelReader;
-import com.mesosphere.sdk.offer.taskdata.SchedulerLabelWriter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.mesos.Protos;
@@ -90,31 +88,19 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
         if (getTaskName().isPresent()) {
             String taskName = getTaskName().get();
             Protos.TaskInfo.Builder taskBuilder = podInfoBuilder.getTaskBuilder(taskName);
-            taskBuilder.setCommand(new SchedulerTaskEnvWriter(taskBuilder).setPort(portName, customEnvKey, port).toProto());
-            setPortEnvironmentVariable(taskBuilder.getCommandBuilder(), port);
-
-            // Add port to the health check (if defined)
-            if (taskBuilder.hasHealthCheck()) {
-                taskBuilder.getHealthCheckBuilder().setCommand(
-                        new SchedulerTaskEnvWriter(taskBuilder.getHealthCheck()).setPort(portName, customEnvKey, port).toProto());
-                setPortEnvironmentVariable(taskBuilder.getHealthCheckBuilder().getCommandBuilder(), port);
-            } else {
-                LOGGER.info("Health check is not defined for task: {}", taskName);
-            }
-
-            // Add port to the readiness check (if a readiness check is defined)
             try {
-                taskBuilder.setLabels(new SchedulerLabelWriter(taskBuilder)
-                        .setReadinessCheckPortEnvvar(portName, customEnvKey, Long.toString(port))
-                        .toProto());
+                taskBuilder = new SchedulerTaskEnvWriter(taskBuilder)
+                        .setPort(portName, customEnvKey, port)
+                        .toProto();
             } catch (TaskException e) {
-                LOGGER.error("Got exception while adding PORT env var to ReadinessCheck", e);
+                LOGGER.error(String.format(
+                        "Got exception while adding PORT env vars to Task %s", taskBuilder.getName()), e);
             }
             resourceBuilder = ResourceUtils.getResourceBuilder(taskBuilder, resource);
         } else {
             Protos.ExecutorInfo.Builder executorBuilder = podInfoBuilder.getExecutorBuilder().get();
             executorBuilder.getCommandBuilder().setEnvironment(new SchedulerExecutorEnvWriter(executorBuilder)
-                    .setPortEnvvar(portName, customEnvKey, port)
+                    .setPort(portName, customEnvKey, port)
                     .toProto());
             resourceBuilder = ResourceUtils.getResourceBuilder(executorBuilder, resource);
         }

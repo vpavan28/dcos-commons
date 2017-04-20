@@ -10,7 +10,6 @@ import org.apache.mesos.Protos.Labels;
 import org.apache.mesos.Protos.Offer;
 import org.apache.mesos.Protos.TaskInfo;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.mesosphere.sdk.offer.TaskException;
 import com.mesosphere.sdk.specification.GoalState;
 
@@ -18,6 +17,13 @@ import com.mesosphere.sdk.specification.GoalState;
  * Provides write access to task labels which are (only) written by the Scheduler.
  */
 public class SchedulerLabelWriter extends TaskDataWriter {
+
+    /**
+     * @see TaskDataWriter#TaskDataWriter()
+     */
+    public SchedulerLabelWriter() {
+        super();
+    }
 
     /**
      * @see TaskDataWriter#TaskDataWriter(java.util.Map)
@@ -112,26 +118,9 @@ public class SchedulerLabelWriter extends TaskDataWriter {
     }
 
     /**
-     * Updates the stored readiness check, if any, to have the provided environment variable.
-     * Does nothing if no readiness check is present.
-     *
-     * @throws TaskException if parsing a previously set {@link HealthCheck} failed
-     */
-    public SchedulerLabelWriter setReadinessCheckEnvvar(String key, String value) throws TaskException {
-        Optional<HealthCheck> readinessCheck = getReadinessCheck();
-        if (!readinessCheck.isPresent()) {
-            return this;
-        }
-        HealthCheck.Builder readinessCheckBuilder = readinessCheck.get().toBuilder();
-        CommandUtils.setEnvVar(readinessCheckBuilder.getCommandBuilder(), key, value);
-        return setReadinessCheck(readinessCheckBuilder.build());
-    }
-
-    /**
      * Returns the embedded readiness check, or an empty Optional if no readiness check is configured.
      */
-    @VisibleForTesting
-    protected Optional<HealthCheck> getReadinessCheck() throws TaskException {
+    public Optional<HealthCheck> getReadinessCheck() throws TaskException {
         Optional<String> encodedReadinessCheck = getOptional(LabelConstants.READINESS_CHECK_LABEL);
         return (encodedReadinessCheck.isPresent())
                 ? Optional.of(LabelUtils.decodeHealthCheck(encodedReadinessCheck.get()))

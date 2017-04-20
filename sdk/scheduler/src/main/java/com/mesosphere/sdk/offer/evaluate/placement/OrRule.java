@@ -3,7 +3,6 @@ package com.mesosphere.sdk.offer.evaluate.placement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -42,11 +41,8 @@ public class OrRule implements PlacementRule {
             children.add(child);
         }
         return EvaluationOutcome.create(
-                passingCount != 0,
-                this,
-                Collections.emptyList(),
-                children,
-                "%d of %d rules are passing:", passingCount, rules.size());
+                passingCount != 0, this, "%d of %d rules are passing:", passingCount, rules.size())
+                .setChildren(children);
     }
 
     @JsonProperty("rules")
