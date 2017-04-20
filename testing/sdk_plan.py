@@ -8,8 +8,11 @@ import shakedown
 
 
 def get_deployment_plan(service_name):
-    sdk_utils.out("Waiting for deploy plan to complete...")
     return get_plan(service_name, "deploy")
+
+
+def get_recovery_plan(service_name):
+    return get_plan(service_name, "recovery")
 
 
 def get_sidecar_plan(service_name):
@@ -26,6 +29,8 @@ def start_plan(service_name, plan, parameters=None):
 
 
 def get_plan(service_name, plan):
+    sdk_utils.out("Waiting for {} plan to complete...".format(service_name))
+
     def fn():
         return sdk_api.get(service_name, "/v1/plans/{}".format(plan))
     return sdk_spin.time_wait_return(fn)

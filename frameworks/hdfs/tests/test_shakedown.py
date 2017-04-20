@@ -1,14 +1,13 @@
 import json
-import time
-import traceback
 
 import pytest
 import shakedown
+import time
 
 import sdk_cmd as cmd
 import sdk_install as install
 import sdk_marathon as marathon
-import sdk_spin as spin
+import sdk_plan as plan
 import sdk_tasks as tasks
 import sdk_utils
 from tests.config import (
@@ -28,6 +27,10 @@ def setup_module(module):
     install.uninstall(PACKAGE_NAME)
     sdk_utils.gc_frameworks()
     install.install(PACKAGE_NAME, DEFAULT_TASK_COUNT)
+
+
+def setup_function(function):
+    check_healthy()
 
 
 def teardown_module(module):
@@ -70,58 +73,48 @@ def test_integrity_on_name_node_failure():
 
 @pytest.mark.recovery
 def test_kill_journal_node():
-    check_healthy()
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal-0')
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     tasks.kill_task_with_pattern('journalnode', 'journal-0-node.hdfs.mesos')
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'journal', journal_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'name', name_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
-    check_healthy()
 
 
 @pytest.mark.sanity
 @pytest.mark.recovery
 def test_kill_name_node():
-    check_healthy()
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name-0')
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     tasks.kill_task_with_pattern('namenode', 'name-0-node.hdfs.mesos')
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'name', name_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'journal', journal_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
-    check_healthy()
 
 
 @pytest.mark.sanity
 @pytest.mark.recovery
 def test_kill_data_node():
-    check_healthy()
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data-0')
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
 
     tasks.kill_task_with_pattern('datanode', 'data-0-node.hdfs.mesos')
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'data', data_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'journal', journal_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'name', name_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
-    check_healthy()
 
 
 @pytest.mark.sanity
 @pytest.mark.recovery
 def test_kill_scheduler():
-    check_healthy()
     tasks.kill_task_with_pattern('hdfs.scheduler.Main', shakedown.get_service_ips('marathon').pop())
     check_healthy()
 
@@ -129,63 +122,53 @@ def test_kill_scheduler():
 @pytest.mark.sanity
 @pytest.mark.recovery
 def test_kill_all_journalnodes():
-    check_healthy()
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     for host in shakedown.get_service_ips(PACKAGE_NAME):
         tasks.kill_task_with_pattern('journalnode', host)
 
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'journal', journal_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'name', name_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
-    check_healthy()
 
 
 @pytest.mark.sanity
 @pytest.mark.recovery
 def test_kill_all_namenodes():
-    check_healthy()
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     for host in shakedown.get_service_ips(PACKAGE_NAME):
         tasks.kill_task_with_pattern('namenode', host)
 
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'name', name_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'journal', journal_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
-    check_healthy()
 
 
 @pytest.mark.sanity
 @pytest.mark.recovery
 def test_kill_all_datanodes():
-    check_healthy()
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     for host in shakedown.get_service_ips(PACKAGE_NAME):
         tasks.kill_task_with_pattern('datanode', host)
 
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'data', data_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'journal', journal_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'name', name_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
-    check_healthy()
 
 
 @pytest.mark.sanity
 @pytest.mark.recovery
-@pytest.mark.special
 def test_permanently_replace_namenodes():
     replace_name_node(0)
     replace_name_node(1)
@@ -199,7 +182,6 @@ def test_install():
 
 @pytest.mark.sanity
 def test_bump_journal_cpus():
-    check_healthy()
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
     sdk_utils.out('journal ids: ' + str(journal_ids))
 
@@ -211,8 +193,6 @@ def test_bump_journal_cpus():
 
 @pytest.mark.sanity
 def test_bump_data_nodes():
-    check_healthy()
-
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
     sdk_utils.out('data ids: ' + str(data_ids))
 
@@ -224,17 +204,10 @@ def test_bump_data_nodes():
 
 @pytest.mark.sanity
 def test_modify_app_config():
-    check_healthy()
     app_config_field = 'TASKCFG_ALL_CLIENT_READ_SHORTCIRCUIT_STREAMS_CACHE_SIZE_EXPIRY_MS'
 
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
     name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
-    data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
-    sdk_utils.out('journal ids: ' + str(journal_ids))
-    sdk_utils.out('name ids: ' + str(name_ids))
-    sdk_utils.out('zkfc ids: ' + str(zkfc_ids))
-    sdk_utils.out('data ids: ' + str(data_ids))
 
     config = marathon.get_config(PACKAGE_NAME)
     sdk_utils.out('marathon config: ')
@@ -244,27 +217,18 @@ def test_modify_app_config():
     marathon.update_app(PACKAGE_NAME, config)
 
     # All tasks should be updated because hdfs-site.xml has changed
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, 'journal', journal_ids)
     tasks.check_tasks_updated(PACKAGE_NAME, 'name', name_ids)
-    tasks.check_tasks_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
     tasks.check_tasks_updated(PACKAGE_NAME, 'data', journal_ids)
-
-    check_healthy()
 
 
 @pytest.mark.sanity
 def test_modify_app_config_rollback():
-    check_healthy()
     app_config_field = 'TASKCFG_ALL_CLIENT_READ_SHORTCIRCUIT_STREAMS_CACHE_SIZE_EXPIRY_MS'
 
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
-    name_ids = tasks.get_task_ids(PACKAGE_NAME, 'name')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
-    sdk_utils.out('journal ids: ' + str(journal_ids))
-    sdk_utils.out('name ids: ' + str(name_ids))
-    sdk_utils.out('zkfc ids: ' + str(zkfc_ids))
-    sdk_utils.out('data ids: ' + str(data_ids))
 
     old_config = marathon.get_config(PACKAGE_NAME)
     config = marathon.get_config(PACKAGE_NAME)
@@ -291,8 +255,7 @@ def test_modify_app_config_rollback():
     config = marathon.get_config(PACKAGE_NAME)
     assert int(config['env'][app_config_field]) == expiry_ms
 
-    # ZKFC and Data tasks should not have been affected
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
+    # Data tasks should not have been affected
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
 
 
@@ -301,16 +264,14 @@ def replace_name_node(index):
     name_node_name = 'name-' + str(index)
     name_id = tasks.get_task_ids(PACKAGE_NAME, name_node_name)
     journal_ids = tasks.get_task_ids(PACKAGE_NAME, 'journal')
-    zkfc_ids = tasks.get_task_ids(PACKAGE_NAME, 'zkfc')
     data_ids = tasks.get_task_ids(PACKAGE_NAME, 'data')
 
     cmd.run_cli('hdfs pods replace ' + name_node_name)
 
+    check_healthy()
     tasks.check_tasks_updated(PACKAGE_NAME, name_node_name, name_id)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'journal', journal_ids)
     tasks.check_tasks_not_updated(PACKAGE_NAME, 'data', data_ids)
-    tasks.check_tasks_not_updated(PACKAGE_NAME, 'zkfc', zkfc_ids)
-    check_healthy()
 
 
 def write_some_data(data_node_host, file_name):
@@ -364,35 +325,9 @@ def find_java_home(host):
     java_home = output.rstrip()
     sdk_utils.out("java_home: {}".format(java_home))
     return java_home
-    
-    
+
+
 def check_healthy(count=DEFAULT_TASK_COUNT):
-    service_plan_complete("deploy")
-    service_plan_complete("recovery")
+    plan.get_deployment_plan(PACKAGE_NAME)
+    plan.get_recovery_plan(PACKAGE_NAME)
     tasks.check_running(PACKAGE_NAME, count)
-
-    
-def service_plan_complete(plan_name):
-    def fun():
-        try:
-            pl = service_cli('plan show {}'.format(plan_name))
-            sdk_utils.out('Running service_plan_complete for plan {}'.format(plan_name))
-            sdk_utils.out(pl)
-            sdk_utils.out('status = {}'.format(pl['status']))
-            if pl['status'] == 'COMPLETE':
-                return True
-        except:
-            tb = traceback.format_exc()
-            sdk_utils.out(tb)
-            return False
-        sdk_utils.out('Plan {} is not complete ({})'.format(plan_name, pl['status']))
-        return False
-
-    return spin.time_wait_return(fun)
-
-
-def service_cli(cmd_str):
-    full_cmd = '{} {}'.format(PACKAGE_NAME, cmd_str)
-    ret_str = cmd.run_cli(full_cmd)
-    return json.loads(ret_str)
-
