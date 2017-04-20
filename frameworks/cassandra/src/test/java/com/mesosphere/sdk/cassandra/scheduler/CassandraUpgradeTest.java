@@ -48,7 +48,8 @@ public class CassandraUpgradeTest extends BaseServiceSpecTest {
                 "TASKCFG_ALL_CASSANDRA_HEAP_NEW_MB", "400",
                 "CASSANDRA_HEAP_GC", "CMS",
                 "CASSANDRA_DISK_MB", "5000",
-                "CASSANDRA_DISK_TYPE", "ROOT");
+                "CASSANDRA_DISK_TYPE", "ROOT",
+                "CASSANDRA_DOCKER_VOLUME_NAME", "CassandraVolume");
     }
 
     @Test
