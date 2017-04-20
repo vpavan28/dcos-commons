@@ -24,11 +24,13 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
                 "JOURNAL_MEM", "256",
                 "JOURNAL_DISK", "5000",
                 "JOURNAL_DISK_TYPE", "ROOT",
+                "JOURNAL_DISK_DOCKER_VOLUME_NAME", "HDFSJournal",
                 "JOURNAL_STRATEGY", "parallel",
                 "NAME_CPUS", "1.0",
                 "NAME_MEM", "256",
                 "NAME_DISK", "5000",
                 "NAME_DISK_TYPE", "ROOT",
+                "NAME_DISK_DOCKER_VOLUME_NAME", "HDFSName",
                 "ZKFC_CPUS", "1.0",
                 "ZKFC_MEM", "256",
                 "DATA_COUNT", "3",
@@ -36,7 +38,10 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
                 "DATA_MEM", "256",
                 "DATA_DISK", "5000",
                 "DATA_DISK_TYPE", "ROOT",
+                "DATA_DISK_DOCKER_VOLUME_NAME", "HDFSData",
                 "DATA_STRATEGY", "parallel",
+                "YARN_CPUS", "2.0",
+                "YARN_MEM", "2048",
                 "EXECUTOR_URI", "",
                 "LIBMESOS_URI", "",
                 "HDFS_URI", "",
@@ -74,7 +79,13 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
                 "TASKCFG_ALL_HADOOP_PROXYUSER_ROOT_HOSTS", "*",
                 "TASKCFG_ALL_HADOOP_PROXYUSER_ROOT_GROUPS", "*",
                 "TASKCFG_ALL_HADOOP_PROXYUSER_HTTPFS_GROUPS", "*",
-                "TASKCFG_ALL_HADOOP_PROXYUSER_HTTPFS_HOSTS", "*");
+                "TASKCFG_ALL_HADOOP_PROXYUSER_HTTPFS_HOSTS", "*",
+                "TASKCFG_ALL_YARN_NODE_SCHED_MIN_ALLOC_MB", "128",
+                "TASKCFG_ALL_YARN_NODE_SCHED_MAX_ALLOC_MB", "2048",
+                "TASKCFG_ALL_YARN_NODE_SCHED_MIN_ALLOC_VCORES", "1",
+                "TASKCFG_ALL_YARN_NODE_SCHED_MAX_ALLOC_VCORES", "2",
+                "TASKCFG_ALL_YARN_NODE_MANAGER_MEM_MB", "4096",
+                "TASKCFG_ALL_YARN_NODE_MANAGER_CPU_VCORES", "4");
     }
 
     @Test
@@ -92,12 +103,18 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         renderTemplate(System.getProperty("user.dir") + "/src/main/dist/core-site.xml");
     }
 
+    @Test
+    public void testRenderYarnSiteXml() throws IOException {
+        renderTemplate(System.getProperty("user.dir") + "/src/main/dist/yarn-site.xml");
+    }
+
     private void renderTemplate(String pathStr) throws IOException {
         String fileStr = new String(Files.readAllBytes(Paths.get(pathStr)), StandardCharsets.UTF_8);
 
         // Reproduction of what's added to tasks automatically, and in Main.java:
         Map<String, String> updatedEnv = new TaskEnvRouter(envVars).getConfig("ALL");
         updatedEnv.put(EnvConstants.FRAMEWORK_HOST_TASKENV, "hdfs.on.some.cluster");
+        updatedEnv.put(EnvConstants.FRAMEWORK_NAME_TASKENV, System.getenv(EnvConstants.FRAMEWORK_NAME_TASKENV));
         updatedEnv.put("MESOS_SANDBOX", "/mnt/sandbox");
         updatedEnv.put("SERVICE_ZK_ROOT", "/dcos-service-path__to__hdfs");
 
