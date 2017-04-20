@@ -8,7 +8,7 @@
         "name" : {
           "description":"The name of the service instance",
           "type":"string",
-          "default":"hdfs"
+          "default":"hadoop-px"
         },
         "user": {
           "type": "string",
@@ -18,7 +18,7 @@
         "principal" : {
           "description":"The principal for the HDFS service instance.",
           "type":"string",
-          "default":"hdfs-principal"
+          "default":"hadoop-principal"
         },
         "secret_name": {
           "description":"Name of the Secret Store credentials to use for DC/OS service authentication. This should be left empty unless service authentication is needed.",
@@ -97,17 +97,22 @@
           "type":"number",
           "default": 5000
         },
-        "disk_type":{
-          "description":"Journal node disk type",
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
           "type":"string",
-          "default": "ROOT"
+          "default": "HDFSJournalVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         }
       },
       "required":[
         "cpus",
         "mem",
         "disk",
-        "disk_type"
+        "portworx_volume_name"
       ]
     },
     "name_node":{
@@ -129,17 +134,22 @@
           "type":"number",
           "default": 5000
         },
-        "disk_type":{
-          "description":"Name node disk type",
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
           "type":"string",
-          "default": "ROOT"
+          "default": "HDFSNameVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         }
       },
       "required":[
         "cpus",
         "mem",
         "disk",
-        "disk_type"
+        "portworx_volume_name"
       ]
     },
     "zkfc_node":{
@@ -186,17 +196,22 @@
           "type":"number",
           "default": 5000
         },
-        "disk_type":{
-          "description":"Data node disk type",
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
           "type":"string",
-          "default": "ROOT"
+          "default": "HDFSDataVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         }
       },
       "required":[
         "cpus",
         "mem",
         "disk",
-        "disk_type"
+        "portworx_volume_name"
       ]
     },
     "hdfs": {
@@ -211,12 +226,12 @@
         "name_node_rpc_port": {
           "type": "integer",
           "description": "The RPC port for HDFS Name Nodes.",
-          "default": 9001
+          "default": 10001
         },
         "name_node_http_port": {
           "type": "integer",
           "description": "The HTTP port for HDFS Name Nodes. ",
-          "default": 9002
+          "default": 10002
         },
         "zkfc_port": {
           "type": "integer",
@@ -236,17 +251,17 @@
         "data_node_rpc_port": {
           "type": "integer",
           "description": "The RPC port used by Data Nodes.",
-          "default": 9003
+          "default": 10003
         },
         "data_node_http_port": {
           "type": "integer",
           "description": "The HTTP port used by Data Nodes.",
-          "default": 9004
+          "default": 10004
         },
         "data_node_ipc_port": {
           "type": "integer",
           "description": "The IPS port used by Data Nodes.",
-          "default": 9005
+          "default": 10005
         },
         "permissions_enabled": {
           "type": "boolean",

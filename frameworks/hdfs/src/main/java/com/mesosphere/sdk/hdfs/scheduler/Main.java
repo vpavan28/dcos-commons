@@ -51,7 +51,8 @@ public class Main {
                 .setPlansFrom(rawServiceSpec);
         return builder
                 .setEndpointProducer("hdfs-site.xml", EndpointProducer.constant(getHdfsSiteXml()))
-                .setEndpointProducer("core-site.xml", EndpointProducer.constant(getCoreSiteXml()));
+                .setEndpointProducer("core-site.xml", EndpointProducer.constant(getCoreSiteXml()))
+                .setEndpointProducer("yarn-site.xml", EndpointProducer.constant(getYarnSiteXml()));
     }
 
     private static String getHdfsSiteXml() {
@@ -60,6 +61,10 @@ public class Main {
 
     private static String getCoreSiteXml() {
         return renderTemplate(System.getProperty("user.dir") + "/hdfs-scheduler/core-site.xml");
+    }
+
+    private static String getYarnSiteXml() {
+        return renderTemplate(System.getProperty("user.dir") + "/hdfs-scheduler/yarn-site.xml");
     }
 
     private static String renderTemplate(String pathStr) {
@@ -97,8 +102,12 @@ public class Main {
                 .placementRule(TaskTypeRule.avoid("data"))
                 .build();
 
+        PodSpec yarn = DefaultPodSpec.newBuilder(getPodSpec(serviceSpec, "yarn"))
+                .placementRule(new AndRule(TaskTypeRule.avoid("yarn"), TaskTypeRule.colocateWith("data")))
+                .build();
+
         return DefaultServiceSpec.newBuilder(serviceSpec)
-                .pods(Arrays.asList(journal, name, data))
+                .pods(Arrays.asList(journal, name, data, yarn))
                 .build();
     }
 

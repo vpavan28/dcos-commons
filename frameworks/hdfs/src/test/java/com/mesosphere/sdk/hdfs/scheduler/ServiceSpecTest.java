@@ -28,11 +28,13 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("JOURNAL_CPUS", "1.0");
         ENV_VARS.set("JOURNAL_MEM", "256");
         ENV_VARS.set("JOURNAL_DISK", "5000");
+        ENV_VARS.set("JOURNAL_DISK_DOCKER_VOLUME_NAME", "HDFSJournal");
         ENV_VARS.set("JOURNAL_DISK_TYPE", "ROOT");
         ENV_VARS.set("JOURNAL_STRATEGY", "parallel");
         ENV_VARS.set("NAME_CPUS", "1.0");
         ENV_VARS.set("NAME_MEM", "256");
         ENV_VARS.set("NAME_DISK", "5000");
+        ENV_VARS.set("NAME_DISK_DOCKER_VOLUME_NAME", "HDFSName");
         ENV_VARS.set("NAME_DISK_TYPE", "ROOT");
         ENV_VARS.set("ZKFC_CPUS", "1.0");
         ENV_VARS.set("ZKFC_MEM", "256");
@@ -41,6 +43,7 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("DATA_MEM", "256");
         ENV_VARS.set("DATA_DISK", "5000");
         ENV_VARS.set("DATA_DISK_TYPE", "ROOT");
+        ENV_VARS.set("DATA_DISK_DOCKER_VOLUME_NAME", "HDFSData");
         ENV_VARS.set("DATA_STRATEGY", "parallel");
         ENV_VARS.set("EXECUTOR_URI", "");
         ENV_VARS.set("LIBMESOS_URI", "");

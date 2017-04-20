@@ -1,9 +1,9 @@
 {
   "packagingVersion": "2.0",
-  "name": "hdfs",
+  "name": "hadoop-px",
   "version": "{{package-version}}",
   "maintainer": "support@mesosphere.io",
-  "description": "Apache Hadoop Distributed File System (HDFS)",
+  "description": "Apache Hadoop",
   "selected": false,
   "framework": true,
   "tags": ["hdfs", "hadoop"],
