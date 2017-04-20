@@ -35,6 +35,7 @@ public class Main {
     private static final String SERVICE_ZK_ROOT_TASKENV = "SERVICE_ZK_ROOT";
     private static final String HDFS_SITE_XML = "hdfs-site.xml";
     private static final String CORE_SITE_XML = "core-site.xml";
+    private static final String YARN_SITE_XML = "yarn-site.xml";
 
     public static void main(String[] args) throws Exception {
         if (args.length > 0) {
@@ -62,7 +63,9 @@ public class Main {
                 .setEndpointProducer(HDFS_SITE_XML,
                         EndpointProducer.constant(renderTemplate(HDFS_SITE_XML, serviceSpec.getName())))
                 .setEndpointProducer(CORE_SITE_XML,
-                        EndpointProducer.constant(renderTemplate(CORE_SITE_XML, serviceSpec.getName())));
+                        EndpointProducer.constant(renderTemplate(CORE_SITE_XML, serviceSpec.getName())))
+                .setEndpointProducer(YARN_SITE_XML,
+                        EndpointProducer.constant(renderTemplate(YARN_SITE_XML, serviceSpec.getName())));
     }
 
     private static String renderTemplate(String filename, String serviceName) {
@@ -106,8 +109,12 @@ public class Main {
                 .placementRule(TaskTypeRule.avoid("data"))
                 .build();
 
+        PodSpec yarn = DefaultPodSpec.newBuilder(getPodSpec(serviceSpec, "yarn"))
+                .placementRule(new AndRule(TaskTypeRule.avoid("yarn"), TaskTypeRule.colocateWith("data")))
+                .build();
+
         return DefaultServiceSpec.newBuilder(serviceSpec)
-                .pods(Arrays.asList(journal, name, data))
+                .pods(Arrays.asList(journal, name, data, yarn))
                 .build();
     }
 
