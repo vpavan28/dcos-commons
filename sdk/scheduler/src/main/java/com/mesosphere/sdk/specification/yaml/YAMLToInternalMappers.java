@@ -369,6 +369,9 @@ public class YAMLToInternalMappers {
             for (RawVolume rawVolume : rawVolumes.values()) {
                 resourceSetBuilder.addVolume(
                         rawVolume.getType(),
+                        rawVolume.getDockerVolumeName(),
+                        rawVolume.getDockerDriverName(),
+                        rawVolume.getDockerDriverOptions(),
                         Double.valueOf(rawVolume.getSize()),
                         rawVolume.getPath());
             }
@@ -376,6 +379,9 @@ public class YAMLToInternalMappers {
         if (rawSingleVolume != null) {
             resourceSetBuilder.addVolume(
                     rawSingleVolume.getType(),
+                    rawSingleVolume.getDockerVolumeName(),
+                    rawSingleVolume.getDockerDriverName(),
+                    rawSingleVolume.getDockerDriverOptions(),
                     Double.valueOf(rawSingleVolume.getSize()),
                     rawSingleVolume.getPath());
         }

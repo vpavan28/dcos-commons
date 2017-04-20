@@ -180,6 +180,9 @@ public class DefaultResourceSet implements ResourceSet {
         }
 
         public Builder addVolume(String volumeType,
+                                 String dockerVolumeName,
+                                 String dockerDriverName,
+                                 String dockerDriverOptions,
                                  Double size,
                                  String containerPath) {
             VolumeSpec.Type volumeTypeEnum;
@@ -190,14 +193,30 @@ public class DefaultResourceSet implements ResourceSet {
                         "Provided volume type '%s' for path '%s' is invalid. Expected type to be one of: %s",
                         volumeType, containerPath, Arrays.asList(VolumeSpec.Type.values())));
             }
-            DefaultVolumeSpec volume = new DefaultVolumeSpec(
+
+            VolumeSpec volume;
+            if (volumeTypeEnum == VolumeSpec.Type.DOCKER) {
+                volume = new DockerVolumeSpec(
                     size,
                     volumeTypeEnum,
+                    dockerVolumeName,
+                    dockerDriverName,
+                    dockerDriverOptions,
                     containerPath,
                     role,
                     preReservedRole,
                     principal,
                     "DISK_SIZE");
+            } else {
+                volume = new DefaultVolumeSpec(
+                        size,
+                        volumeTypeEnum,
+                        containerPath,
+                        role,
+                        preReservedRole,
+                        principal,
+                        "DISK_SIZE");
+            }
             if (volumes.stream()
                     .anyMatch(volumeSpecification ->
                             Objects.equals(volumeSpecification.getContainerPath(), containerPath))) {

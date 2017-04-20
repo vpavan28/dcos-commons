@@ -184,7 +184,7 @@ public class PodInfoBuilder {
                 .setSlaveId(CommonIdUtils.emptyAgentId());
 
         if (!podInstance.getPod().getNetworks().isEmpty()) {
-            taskInfoBuilder.setContainer(getContainerInfo(podInstance.getPod(), false));
+            taskInfoBuilder.setContainer(getContainerInfo(podInstance.getPod(), podInstance.getIndex(), false));
         } else {
             taskInfoBuilder.setContainer(Protos.ContainerInfo.newBuilder().setType(Protos.ContainerInfo.Type.MESOS));
         }
@@ -227,7 +227,7 @@ public class PodInfoBuilder {
                 .setExecutorId(Protos.ExecutorID.newBuilder().setValue("").build()); // Set later by ExecutorRequirement
         // Populate ContainerInfo with the appropriate information from PodSpec.
         // This includes networks, rlimits, secret volumes...
-        Protos.ContainerInfo containerInfo = getContainerInfo(podSpec);
+        Protos.ContainerInfo containerInfo = getContainerInfo(podSpec, podInstance.getIndex());
         if (containerInfo != null) {
             executorInfoBuilder.setContainer(containerInfo);
         }
@@ -415,7 +415,7 @@ public class PodInfoBuilder {
         return String.format("%s%s", CONFIG_TEMPLATE_DOWNLOAD_PATH, config.getName());
     }
 
-    private static Protos.ContainerInfo getContainerInfo(PodSpec podSpec, boolean addExtraParameters) {
+    private static Protos.ContainerInfo getContainerInfo(PodSpec podSpec, int podIndex, boolean addExtraParameters) {
         Collection<Protos.Volume> secretVolumes = getExecutorInfoSecretVolumes(podSpec.getSecrets());
 
         if (!podSpec.getImage().isPresent()
@@ -451,11 +451,86 @@ public class PodInfoBuilder {
             }
         }
 
+        if (!podSpec.getTasks().isEmpty()) {
+            Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
+            for (TaskSpec task : podSpec.getTasks()) {
+                if (!task.getResourceSet().getVolumes().isEmpty()) {
+                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
+                }
+            }
+        }
+
         return containerInfo.build();
     }
 
-    private static Protos.ContainerInfo getContainerInfo(PodSpec podSpec) {
-        return getContainerInfo(podSpec, true);
+    private static Protos.ContainerInfo getContainerInfo(PodSpec podSpec, int podIndex) {
+        return getContainerInfo(podSpec, podIndex, true);
+    }
+
+    /**
+     * Adds all Docker volumes to the container. If a volume was already added for the same driver it is skipped
+     * @param containerInfo The continaer in which the volmue should be added
+     * @param volumes Collection from which Docker Volumes types should be added
+     * @param podIndex Index of the pod. Used to contruct the docker volume name
+     * @param addedVolmues Map of volumes which have already been added for a driver
+     */
+    private static void addDockerVolumes(Protos.ContainerInfo.Builder containerInfo, Collection<VolumeSpec> volumes,
+            int podIndex, Map<String, List<String>> addedVolumes) {
+        for (VolumeSpec volume : volumes) {
+            if (volume.getType() == VolumeSpec.Type.DOCKER) {
+                DockerVolumeSpec dockerVolume = (DockerVolumeSpec) volume;
+                String volumeName = dockerVolume.getVolumeName() + "-" + Integer.toString(podIndex);
+                // If the driver/volume has already been added, skip it
+                if (addedVolumes.containsKey(dockerVolume.getDriverName())) {
+                    if (addedVolumes.get(dockerVolume.getDriverName()).contains(volumeName)) {
+                        LOGGER.info("DOCKER volume {} with driver {} already present, skipping", volumeName,
+                                dockerVolume.getDriverName());
+                        continue;
+                    }
+                } else {
+                    addedVolumes.put(dockerVolume.getDriverName(), new ArrayList<String>());
+                }
+                addedVolumes.get(dockerVolume.getDriverName()).add(volumeName);
+
+                // Add all the driver options
+                List<Protos.Parameter> paramsList = new ArrayList<Protos.Parameter>();
+                Protos.Parameters.Builder driverOptions = Protos.Parameters.newBuilder();
+                if (dockerVolume.getDriverOptions() != null) {
+                    for (Map.Entry<String, String> option : dockerVolume.getDriverOptions().entrySet()) {
+                        paramsList.add(Protos.Parameter.newBuilder()
+                                .setKey(option.getKey())
+                                .setValue(option.getValue())
+                                .build());
+                    }
+                }
+                // Pass the volume size as an option. Size is in MB, round up to closest in GB
+                int sizeGB = (int) dockerVolume.getSize() / 1024;
+                if ((dockerVolume.getSize() % 1024) != 0) {
+                    sizeGB++;
+                }
+                paramsList.add(Protos.Parameter.newBuilder()
+                        .setKey("size")
+                        .setValue(Integer.toString(sizeGB))
+                        .build());
+
+                driverOptions.addAllParameter(paramsList);
+                driverOptions.build();
+
+                LOGGER.info("Adding DOCKER volume {} with driver {} to pod", volumeName,
+                        dockerVolume.getDriverName());
+                containerInfo.addVolumes(Protos.Volume.newBuilder().setSource(
+                        Protos.Volume.Source.newBuilder()
+                                .setDockerVolume(Protos.Volume.Source.DockerVolume.newBuilder()
+                                        .setDriver(dockerVolume.getDriverName())
+                                        .setName(volumeName)
+                                        .setDriverOptions(driverOptions)
+                                        .build())
+                                .setType(Protos.Volume.Source.Type.DOCKER_VOLUME)
+                                .build())
+                        .setMode(Protos.Volume.Mode.RW)
+                        .setContainerPath(volume.getContainerPath()));
+            }
+        }
     }
 
     private static Protos.NetworkInfo getNetworkInfo(NetworkSpec networkSpec) {
