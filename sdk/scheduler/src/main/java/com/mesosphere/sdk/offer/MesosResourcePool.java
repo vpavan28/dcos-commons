@@ -82,7 +82,14 @@ public class MesosResourcePool {
      */
     public Optional<MesosResource> consume(ResourceRequirement resourceRequirement) {
         if (resourceRequirement.expectsResource()) {
-            return consumeReserved(resourceRequirement);
+            Optional<MesosResource> consumedResourceOptional = consumeReserved(resourceRequirement);
+            // If we didn't get back an expected resource and it isn't
+            // persistent, try to get an unreserved resource
+            if (!consumedResourceOptional.isPresent() && !resourceRequirement.hasPersistenceId()) {
+                return consumeUnreservedMerged(resourceRequirement);
+            } else {
+                return consumedResourceOptional;
+            }
         } else if (resourceRequirement.isAtomic()) {
             return consumeAtomic(resourceRequirement);
         } else if (resourceRequirement.reservesResource() || resourceRequirement.consumesUnreservedResource()) {

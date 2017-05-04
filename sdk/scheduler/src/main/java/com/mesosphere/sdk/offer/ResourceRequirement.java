@@ -115,7 +115,7 @@ public class ResourceRequirement {
         return mesosResource.hasResourceId();
     }
 
-    private boolean hasPersistenceId() {
+    public boolean hasPersistenceId() {
         DiskInfo diskInfo = getDiskInfo();
         return diskInfo != null && diskInfo.hasPersistence();
     }
