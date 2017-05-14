@@ -21,6 +21,7 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
                 "BROKER_DISK_SIZE", "5000",
                 "BROKER_DISK_TYPE", "ROOT",
                 "BROKER_DISK_PATH", "path",
+                "BROKER_DISK_DOCKER_VOLUME_NAME", "KafkaVolume",
                 "PORT_BROKER_PORT", "9999",
                 "BROKER_PORT", "0");
     }
