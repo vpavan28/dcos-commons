@@ -4,6 +4,7 @@ scheduler:
 pods:
   kafka:
     count: {{BROKER_COUNT}}
+    image: python:2.7
     placement: {{PLACEMENT_CONSTRAINTS}}
     user: {{FRAMEWORK_USER}}
     uris:
@@ -31,8 +32,11 @@ pods:
               port: 9092
         volume:
           path: {{BROKER_DISK_PATH}}
-          type: {{BROKER_DISK_TYPE}}
+          type: DOCKER
           size: {{BROKER_DISK_SIZE}}
+          docker_volume_driver: pxd
+          docker_volume_name: {{BROKER_DISK_DOCKER_VOLUME_NAME}}
+          docker_driver_options: {{BROKER_DISK_DOCKER_DRIVER_OPTIONS}}
         env:
           KAFKA_DISK_PATH: "{{BROKER_DISK_PATH}}"
           KAFKA_HEAP_OPTS: "-Xms{{BROKER_JAVA_HEAP}}M -Xmx{{BROKER_JAVA_HEAP}}M"
