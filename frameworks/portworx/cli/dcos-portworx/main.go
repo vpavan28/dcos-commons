@@ -2,17 +2,46 @@ package main
 
 import (
 	"github.com/mesosphere/dcos-commons/cli"
+	"github.com/mesosphere/dcos-commons/cli/client"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func main() {
 	app := cli.New()
 
-	cli.HandleConfigSection(app)
-	cli.HandleEndpointsSection(app)
-	cli.HandlePlanSection(app)
-	cli.HandlePodsSection(app)
-	cli.HandleStateSection(app)
+	cli.HandleDefaultSections(app)
+
+	handlePxSection(app)
 
 	kingpin.MustParse(app.Parse(cli.GetArguments()))
+}
+
+func runNodeList(c *kingpin.ParseContext) error {
+	response, err := client.HTTPServiceGet("v1/px/status")
+	if err != nil {
+		client.PrintMessageAndExit(err.Error())
+	} else {
+		client.PrintJSONBytes(response)
+	}
+	return nil
+}
+
+func runVolumeList(c *kingpin.ParseContext) error {
+	response, err := client.HTTPServiceGet("v1/px/volumes")
+	if err != nil {
+		client.PrintMessageAndExit(err.Error())
+	} else {
+		client.PrintJSONBytes(response)
+	}
+	return nil
+}
+
+func handlePxSection(app *kingpin.Application) {
+
+	app.Command("status", "List the status of the nodes in the PX cluster").
+		Action(runNodeList)
+
+	volume := app.Command("volume", "Manage volumes")
+	volume.Command("list", "List the volumes").
+		Action(runVolumeList)
 }

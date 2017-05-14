@@ -1,17 +1,41 @@
 package com.mesosphere.sdk.portworx.scheduler;
 
+import com.mesosphere.sdk.portworx.api.*;
+import com.mesosphere.sdk.scheduler.DefaultScheduler;
 import com.mesosphere.sdk.scheduler.SchedulerFlags;
-import com.mesosphere.sdk.specification.*;
+import com.mesosphere.sdk.specification.DefaultService;
+import com.mesosphere.sdk.specification.DefaultServiceSpec;
+import com.mesosphere.sdk.specification.ServiceSpec;
+import com.mesosphere.sdk.specification.yaml.RawServiceSpec;
 
 import java.io.File;
+import java.util.*;
 
 /**
- * Template service.
+ * Portworx service.
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        if (args.length > 0) {
-            new DefaultService(new File(args[0]), SchedulerFlags.fromEnv()).run();
-        }
+        new DefaultService(createSchedulerBuilder(new File(args[0]))).run();
+    }
+
+    private static DefaultScheduler.Builder createSchedulerBuilder(File pathToYamlSpecification)
+            throws Exception {
+        RawServiceSpec rawServiceSpec = RawServiceSpec.newBuilder(pathToYamlSpecification).build();
+        SchedulerFlags schedulerFlags = SchedulerFlags.fromEnv();
+        DefaultScheduler.Builder schedulerBuilder = DefaultScheduler.newBuilder(
+                DefaultServiceSpec.newGenerator(rawServiceSpec, schedulerFlags).build(),
+                schedulerFlags)
+                .setPlansFrom(rawServiceSpec);
+
+        schedulerBuilder.setCustomResources(getResources(schedulerBuilder.getServiceSpec()));
+        return schedulerBuilder;
+    }
+
+    private static Collection<Object> getResources(ServiceSpec serviceSpec) {
+        final Collection<Object> apiResources = new ArrayList<>();
+        apiResources.add(new PortworxResource(serviceSpec));
+
+        return apiResources;
     }
 }
