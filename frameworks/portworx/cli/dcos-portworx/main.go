@@ -14,5 +14,27 @@ func main() {
 	cli.HandlePodsSection(app)
 	cli.HandleStateSection(app)
 
+	handlePxSection(app)
+
 	kingpin.MustParse(app.Parse(cli.GetArguments()))
+}
+
+func runNodeList(c *kingpin.ParseContext) error {
+	cli.PrintJSON(cli.HTTPGet("v1/px/status"))
+	return nil
+}
+
+func runVolumeList(c *kingpin.ParseContext) error {
+	cli.PrintJSON(cli.HTTPGet("v1/px/volumes"))
+	return nil
+}
+
+func handlePxSection(app *kingpin.Application) {
+
+	app.Command("status", "List the status of the nodes in the PX cluster").
+		Action(runNodeList)
+
+	volume := app.Command("volume", "Manage volumes")
+	volume.Command("list", "List the volumes").
+		Action(runVolumeList)
 }
