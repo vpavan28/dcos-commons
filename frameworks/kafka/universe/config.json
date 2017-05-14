@@ -96,15 +96,10 @@
               "size"
             ]
           },
-          "disk": {
-            "description": "Broker disk requirements (only respected with persistent volumes)",
-            "type": "integer",
-            "default": 5000
-          },
-          "disk_type": {
-            "type": "string",
-            "description": "Disk type to be used for storing broker data. See documentation. [ROOT, MOUNT]",
-            "default": "ROOT"
+          "disk":{
+            "description":"Broker disk requirements in MB",
+            "type":"integer",
+            "default":5000
           },
           "disk_path": {
             "type": "string",
@@ -115,6 +110,16 @@
             "description": "Number of brokers to run",
             "type": "number",
             "default": 3
+          },
+          "portworx_volume_name":{
+            "description":"Portworx volume name",
+            "type":"string",
+            "default": "KafkaVolume"
+          },
+          "portworx_volume_options":{
+            "description":"Portworx volume options. Comma separated key=value pairs",
+            "type":"string",
+           "default": ""
           },
           "port": {
             "description": "Port for broker to listen on",
@@ -131,7 +136,8 @@
           "cpus",
           "mem",
           "disk",
-          "count"
+          "count",
+          "portworx_volume_name"
         ]
       },
       "kafka": {
