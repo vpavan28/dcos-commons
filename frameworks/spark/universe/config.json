@@ -94,6 +94,16 @@
               "type": "integer",
               "default": 2048
             },
+            "portworx_volume_name":{
+              "description":"Portworx volume name",
+              "type":"string",
+              "default": "SparkWorker"
+            },
+            "portworx_volume_options":{
+              "description":"Portworx volume options. Comma separated key=value pairs",
+              "type":"string",
+              "default": ""
+            },
             "disk": {
               "description": "Worker pod disk requirements for scratch (in MB)",
               "type": "integer",
@@ -126,7 +136,8 @@
             "port",
             "webui_port",
             "count",
-            "opts"
+            "opts",
+            "portworx_volume_name"
           ]
         }
       }

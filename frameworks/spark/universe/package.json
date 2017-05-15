@@ -1,6 +1,6 @@
 {
   "packagingVersion": "2.0",
-  "name": "spark-standalone",
+  "name": "spark-standalone-px",
   "version": "{{package-version}}",
   "maintainer": "support@mesosphere.io",
   "description": "An Apache Spark Standalone implementation using the DC/OS SDK",

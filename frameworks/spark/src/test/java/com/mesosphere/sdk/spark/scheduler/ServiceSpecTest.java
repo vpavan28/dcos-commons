@@ -22,6 +22,7 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("WORKER_CPUS", "1.0");
         ENV_VARS.set("WORKER_MEM", "1024");
         ENV_VARS.set("WORKER_DISK", "1024");
+        ENV_VARS.set("WORKER_DOCKER_VOLUME_NAME", "SparkWorker");
         ENV_VARS.set("SPARK_URI", "spark.tar.gz");
         ENV_VARS.set("SPARK_WORKER_PORT", "6060");
         ENV_VARS.set("SPARK_WORKER_WEBUI_PORT", "4041");

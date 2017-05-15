@@ -50,6 +50,7 @@ pods:
           SPARK_MASTER_WEBUI_PORT: {{SPARK_MASTER_WEBUI_PORT}}
   worker:
     count: {{WORKER_COUNT}}
+    image: python:2.7
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SPARK_URI}}
@@ -61,8 +62,11 @@ pods:
         memory: {{WORKER_MEM}}
         volume:
           path: scratch
-          type: ROOT
+          type: DOCKER
           size: {{WORKER_DISK}}
+          docker_volume_driver: pxd
+          docker_volume_name: {{{WORKER_DOCKER_VOLUME_NAME}}}
+          docker_driver_options: {{{WORKER_DOCKER_DRIVER_OPTIONS}}}
         ports:
           data:
             port: {{SPARK_WORKER_PORT}}
