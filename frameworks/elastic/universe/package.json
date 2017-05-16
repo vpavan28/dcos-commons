@@ -1,7 +1,7 @@
 {
   "packagingVersion": "3.0",
   "minDcosReleaseVersion": "1.9",
-  "name": "elastic",
+  "name": "elastic-px",
   "version": "{{package-version}}",
   "maintainer": "support@mesosphere.io",
   "description": "Elasticsearch 5, and optionally X-Pack",

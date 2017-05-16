@@ -16,6 +16,7 @@ public class ElasticServiceTest extends BaseServiceSpecTest {
                 "FRAMEWORK_NAME", "elastic",
                 "FRAMEWORK_USER", "non-root",
                 "PLAN_STRATEGY", "parallel",
+                "MESOS_SANDBOX", "/mnt/mesos/sandbox",
                 "TASKCFG_ALL_ELASTICSEARCH_PLUGINS", "analysis-icu",
                 "TASKCFG_ALL_XPACK_ENABLED", "false",
                 "ELASTICSEARCH_HEALTH_USER", "elastic",
@@ -25,6 +26,7 @@ public class ElasticServiceTest extends BaseServiceSpecTest {
                 "MASTER_NODE_HEAP_MB", "2000",
                 "MASTER_NODE_DISK", "10000",
                 "MASTER_NODE_DISK_TYPE", "ROOT",
+                "MASTER_NODE_DOCKER_VOLUME_NAME", "MasterNodeVolume",
                 "MASTER_NODE_TRANSPORT_PORT", "9300",
                 "DATA_NODE_COUNT", "2",
                 "DATA_NODE_CPUS", "1",
@@ -32,18 +34,21 @@ public class ElasticServiceTest extends BaseServiceSpecTest {
                 "DATA_NODE_HEAP_MB", "2000",
                 "DATA_NODE_DISK", "10000",
                 "DATA_NODE_DISK_TYPE", "ROOT",
+                "DATA_NODE_DOCKER_VOLUME_NAME", "DataNodeVolume",
                 "INGEST_NODE_COUNT", "1",
                 "INGEST_NODE_CPUS", "1",
                 "INGEST_NODE_MEM", "4000",
                 "INGEST_NODE_HEAP_MB", "2000",
                 "INGEST_NODE_DISK", "10000",
                 "INGEST_NODE_DISK_TYPE", "ROOT",
+                "INGEST_NODE_DOCKER_VOLUME_NAME", "IngestNodeVolume",
                 "COORDINATOR_NODE_COUNT", "1",
                 "COORDINATOR_NODE_CPUS", "1",
                 "COORDINATOR_NODE_MEM", "4000",
                 "COORDINATOR_NODE_HEAP_MB", "2000",
                 "COORDINATOR_NODE_DISK", "10000",
-                "COORDINATOR_NODE_DISK_TYPE", "ROOT");
+                "COORDINATOR_NODE_DISK_TYPE", "ROOT",
+                "COORDINATOR_NODE_DOCKER_VOLUME_NAME", "CoordinatorNodeVolume");
     }
 
     @Test
