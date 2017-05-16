@@ -18,7 +18,7 @@
         "user": {
           "description": "The user that runs the Elasticsearch/Kibana services and owns the Mesos sandbox.",
           "type": "string",
-          "default": "nobody"
+          "default": "core"
         },
         "principal": {
           "description": "The principal for the Elasticsearch service instance.",
@@ -83,10 +83,15 @@
           "type": "integer",
           "default": 2000
         },
-        "disk_type": {
-          "type": "string",
-          "description": "Disk type to be used for storing data. [ROOT, MOUNT]",
-          "default": "ROOT"
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
+          "type":"string",
+          "default": "MasterNodeVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         },
         "transport_port": {
           "description": "Transport port for master nodes to listen on.",
@@ -145,10 +150,15 @@
           "type": "integer",
           "default": 10000
         },
-        "disk_type": {
-          "type": "string",
-          "description": "Disk type to be used for storing data. [ROOT, MOUNT]",
-          "default": "ROOT"
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
+          "type":"string",
+          "default": "DataNodeVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         },
         "placement": {
           "description": "Marathon-style placement constraints",
@@ -202,10 +212,15 @@
           "type": "integer",
           "default": 2000
         },
-        "disk_type": {
-          "type": "string",
-          "description": "Disk type to be used for storing data. [ROOT, MOUNT]",
-          "default": "ROOT"
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
+          "type":"string",
+          "default": "IngestNodeVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         },
         "placement": {
           "description": "Marathon-style placement constraints",
@@ -259,10 +274,15 @@
           "type": "integer",
           "default": 1000
         },
-        "disk_type": {
-          "type": "string",
-          "description": "Disk type to be used for storing data. [ROOT, MOUNT]",
-          "default": "ROOT"
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
+          "type":"string",
+          "default": "CoordinatorNodeVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         },
         "placement": {
           "description": "Marathon-style placement constraints",
@@ -301,10 +321,15 @@
           "type": "integer",
           "default": 100
         },
-        "disk_type": {
-          "type": "string",
-          "description": "Disk type to be used for storing data. [ROOT, MOUNT]",
-          "default": "ROOT"
+        "portworx_volume_name":{
+          "description":"Portworx volume name",
+          "type":"string",
+          "default": "KibanaVolume"
+        },
+        "portworx_volume_options":{
+          "description":"Portworx volume options. Comma separated key=value pairs",
+          "type":"string",
+          "default": ""
         },
         "password": {
           "description": "'kibana' user password for basic authentication with Elasticsearch",

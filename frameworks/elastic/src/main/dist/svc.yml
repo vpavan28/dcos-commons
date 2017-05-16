@@ -31,9 +31,12 @@ pods:
               port: 5601
         volume:
           path: "container-path"
-          type: {{KIBANA_DISK_TYPE}}
+          type: DOCKER
           size: {{KIBANA_DISK}}
-        cmd: "./bootstrap && ./kibana-{{ELASTIC_VERSION}}-linux-x86_64/bin/kibana-plugin install file://$MESOS_SANDBOX/x-pack-{{ELASTIC_VERSION}}.zip && exec ./kibana-{{ELASTIC_VERSION}}-linux-x86_64/bin/kibana"
+          docker_volume_driver: pxd
+          docker_volume_name: {{{KIBANA_DOCKER_VOLUME_NAME}}}
+          docker_driver_options: {{{KIBANA_DOCKER_DRIVER_OPTIONS}}}
+        cmd: "./bootstrap && sudo chown {{FRAMEWORK_USER}} $MESOS_SANDBOX/container-path -R && ./kibana-{{ELASTIC_VERSION}}-linux-x86_64/bin/kibana-plugin install file://$MESOS_SANDBOX/x-pack-{{ELASTIC_VERSION}}.zip && exec ./kibana-{{ELASTIC_VERSION}}-linux-x86_64/bin/kibana"
         env:
           MESOS_FRAMEWORK_ID: {{MESOS_FRAMEWORK_ID}}
           KIBANA_PASSWORD: {{KIBANA_PASSWORD}}
@@ -86,9 +89,12 @@ pods:
               port: 9300
         volume:
           path: "container-path"
-          type: {{MASTER_NODE_DISK_TYPE}}
+          type: DOCKER
           size: {{MASTER_NODE_DISK}}
-        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
+          docker_volume_driver: pxd
+          docker_volume_name: {{{MASTER_NODE_DOCKER_VOLUME_NAME}}}
+          docker_driver_options: {{{MASTER_NODE_DOCKER_DRIVER_OPTIONS}}}
+        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && sudo chown {{FRAMEWORK_USER}} $MESOS_SANDBOX/container-path -R && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
         env:
           MASTER_NODE_TRANSPORT_PORT: {{MASTER_NODE_TRANSPORT_PORT}}
           MASTER_ENABLED: true
@@ -146,9 +152,12 @@ pods:
               port: 9300
         volume:
           path: "container-path"
-          type: {{DATA_NODE_DISK_TYPE}}
+          type: DOCKER
           size: {{DATA_NODE_DISK}}
-        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
+          docker_volume_driver: pxd
+          docker_volume_name: {{{DATA_NODE_DOCKER_VOLUME_NAME}}}
+          docker_driver_options: {{{DATA_NODE_DOCKER_DRIVER_OPTIONS}}}
+        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && sudo chown {{FRAMEWORK_USER}} $MESOS_SANDBOX/container-path -R && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
         env:
           MASTER_NODE_TRANSPORT_PORT: {{MASTER_NODE_TRANSPORT_PORT}}
           MASTER_ENABLED: false
@@ -206,9 +215,12 @@ pods:
               port: 9300
         volume:
           path: "container-path"
-          type: {{INGEST_NODE_DISK_TYPE}}
+          type: DOCKER
           size: {{INGEST_NODE_DISK}}
-        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
+          docker_volume_driver: pxd
+          docker_volume_name: {{{INGEST_NODE_DOCKER_VOLUME_NAME}}}
+          docker_driver_options: {{{INGEST_NODE_DOCKER_DRIVER_OPTIONS}}}
+        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && sudo chown {{FRAMEWORK_USER}} $MESOS_SANDBOX/container-path -R && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
         env:
           MASTER_NODE_TRANSPORT_PORT: {{MASTER_NODE_TRANSPORT_PORT}}
           MASTER_ENABLED: false
@@ -266,9 +278,12 @@ pods:
               port: 9300
         volume:
           path: "container-path"
-          type: {{COORDINATOR_NODE_DISK_TYPE}}
+          type: DOCKER
           size: {{COORDINATOR_NODE_DISK}}
-        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
+          docker_volume_driver: pxd
+          docker_volume_name: {{{COORDINATOR_NODE_DOCKER_VOLUME_NAME}}}
+          docker_driver_options: {{{COORDINATOR_NODE_DOCKER_DRIVER_OPTIONS}}}
+        cmd: "./elastic-scheduler/install-plugins.sh && ./bootstrap && sudo chown {{FRAMEWORK_USER}} $MESOS_SANDBOX/container-path -R && exec ./elasticsearch-{{ELASTIC_VERSION}}/bin/elasticsearch"
         env:
           MASTER_NODE_TRANSPORT_PORT: {{MASTER_NODE_TRANSPORT_PORT}}
           MASTER_ENABLED: false
@@ -337,4 +352,3 @@ plans:
       proxylite-deploy:
         strategy: serial
         pod: proxylite
-        
