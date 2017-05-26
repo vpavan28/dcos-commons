@@ -45,6 +45,8 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("DATA_DISK_TYPE", "ROOT");
         ENV_VARS.set("DATA_DISK_DOCKER_VOLUME_NAME", "HDFSData");
         ENV_VARS.set("DATA_STRATEGY", "parallel");
+        ENV_VARS.set("YARN_CPUS", "2.0");
+        ENV_VARS.set("YARN_MEM", "2048");
         ENV_VARS.set("EXECUTOR_URI", "");
         ENV_VARS.set("LIBMESOS_URI", "");
         ENV_VARS.set("HDFS_URI", "");
@@ -82,6 +84,12 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("TASKCFG_ALL_HADOOP_PROXYUSER_ROOT_GROUPS", "*");
         ENV_VARS.set("TASKCFG_ALL_HADOOP_PROXYUSER_HTTPFS_GROUPS", "*");
         ENV_VARS.set("TASKCFG_ALL_HADOOP_PROXYUSER_HTTPFS_HOSTS", "*");
+        ENV_VARS.set("TASKCFG_ALL_YARN_NODE_SCHED_MIN_ALLOC_MB", "128");
+        ENV_VARS.set("TASKCFG_ALL_YARN_NODE_SCHED_MAX_ALLOC_MB", "2048");
+        ENV_VARS.set("TASKCFG_ALL_YARN_NODE_SCHED_MIN_ALLOC_VCORES", "1");
+        ENV_VARS.set("TASKCFG_ALL_YARN_NODE_SCHED_MAX_ALLOC_VCORES", "2");
+        ENV_VARS.set("TASKCFG_ALL_YARN_NODE_MANAGER_MEM_MB", "4096");
+        ENV_VARS.set("TASKCFG_ALL_YARN_NODE_MANAGER_CPU_VCORES", "4");
     }
 
     @Test
@@ -97,6 +105,11 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
     @Test
     public void testRenderCoreSiteXml() throws IOException {
         renderTemplate(System.getProperty("user.dir") + "/src/main/dist/core-site.xml");
+    }
+
+    @Test
+    public void testRenderYarnSiteXml() throws IOException {
+        renderTemplate(System.getProperty("user.dir") + "/src/main/dist/yarn-site.xml");
     }
 
     private void renderTemplate(String pathStr) throws IOException {
