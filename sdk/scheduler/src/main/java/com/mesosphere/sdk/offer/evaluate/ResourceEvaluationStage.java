@@ -95,9 +95,9 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
 
                 MesosResource existingResource = existingResourceOptional.get();
 
-                // Compute any needed resource pool consumption/release operations as well as any additional needed Mesos
-                // Operations. In the case where a requirement has changed for an atomic resource, no Operations can be
-                // performed because the resource is atomic.
+                // Compute any needed resource pool consumption/release operations as well as any additional needed
+                // Mesos Operations. In the case where a requirement has changed for an atomic resource, no Operations
+                // can be performed because the resource is atomic.
 
                 // Does existing resource satisfy the resource requirement?
                 if (ValueUtils.equal(existingResource.getValue(), resourceRequirement.getValue())) {
@@ -111,7 +111,8 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
                             TextFormat.shortDebugString(existingResource.getValue()),
                             TextFormat.shortDebugString(resourceRequirement.getValue()));
                 } else {
-                    Value reserveValue = ValueUtils.subtract(resourceRequirement.getValue(), existingResource.getValue());
+                    Value reserveValue = ValueUtils.subtract(resourceRequirement.getValue(),
+                            existingResource.getValue());
                     if (ValueUtils.compare(reserveValue, ValueUtils.getZero(reserveValue.getType())) > 0) {
                         logger.info("    Reservation for resource '{}' needs increasing from current {} to required {}",
                                 resourceRequirement.getName(),
