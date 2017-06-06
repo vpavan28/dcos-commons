@@ -119,7 +119,7 @@ distributions {
     }
 }
 
-check.finalizedBy jacocoTestReport
+//check.finalizedBy jacocoTestReport
 
 jacocoTestReport {
     reports {
