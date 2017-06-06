@@ -20,9 +20,13 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("ETCD_COUNT", "3");
         ENV_VARS.set("ETCD_CPUS", "0.1");
         ENV_VARS.set("ETCD_MEM", "512");
+        ENV_VARS.set("ETCD_DISK_TYPE", "ROOT");
+        ENV_VARS.set("ETCD_DISK_SIZE", "5120");
 
         ENV_VARS.set("INFLUXDB_CPUS", "0.1");
         ENV_VARS.set("INFLUXDB_MEM", "512");
+        ENV_VARS.set("INFLUXDB_DISK_TYPE", "ROOT");
+        ENV_VARS.set("INFLUXDB_DISK_SIZE", "1024");
 
         ENV_VARS.set("LIGHTHOUSE_CPUS", "0.1");
         ENV_VARS.set("LIGHTHOUSE_MEM", "512");
