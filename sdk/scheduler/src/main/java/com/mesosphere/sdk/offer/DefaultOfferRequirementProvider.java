@@ -755,7 +755,7 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
 
         // command and user:
         Protos.CommandInfo.Builder executorCommandBuilder = executorInfoBuilder.getCommandBuilder().setValue(
-                "export LD_LIBRARY_PATH=$MESOS_SANDBOX/libmesos-bundle/lib:$LD_LIBRARY_PATH && " +
+                "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MESOS_SANDBOX/libmesos-bundle/lib && " +
                 "export MESOS_NATIVE_JAVA_LIBRARY=$(ls $MESOS_SANDBOX/libmesos-bundle/lib/libmesos-*.so) && " +
                 "export JAVA_HOME=$(ls -d $MESOS_SANDBOX/jre*/) && " +
          // Remove Xms/Xmx if +UseCGroupMemoryLimitForHeap or equivalent detects cgroups memory limit
