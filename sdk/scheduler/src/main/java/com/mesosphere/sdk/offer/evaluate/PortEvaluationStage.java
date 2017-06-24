@@ -115,8 +115,8 @@ public class PortEvaluationStage extends ResourceEvaluationStage implements Offe
     }
 
     @Override
-    protected Protos.Resource getFulfilledResource(Protos.Resource resource) {
-        Protos.Resource reservedResource = super.getFulfilledResource(resource);
+    protected Protos.Resource getFulfilledResource(Protos.Resource resource, boolean forceNewResource) {
+        Protos.Resource reservedResource = super.getFulfilledResource(resource, forceNewResource);
         if (!StringUtils.isBlank(resourceId)) {
             reservedResource = ResourceUtils.setResourceId(ResourceUtils.clearResourceId(reservedResource), resourceId);
         }

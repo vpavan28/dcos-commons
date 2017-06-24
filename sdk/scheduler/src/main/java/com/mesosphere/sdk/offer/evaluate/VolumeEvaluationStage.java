@@ -52,7 +52,7 @@ public class VolumeEvaluationStage extends ResourceEvaluationStage implements Of
         }
 
         final MesosResource mesosResource = mesosResourceOptional.get();
-        Resource fulfilledResource = getFulfilledResource(mesosResource.getResource());
+        Resource fulfilledResource = getFulfilledResource(mesosResource.getResource(), false);
         Collection<OfferRecommendation> offerRecommendations = new ArrayList<>();
 
         if (resourceRequirement.reservesResource()) {
@@ -82,8 +82,8 @@ public class VolumeEvaluationStage extends ResourceEvaluationStage implements Of
     }
 
     @Override
-    protected Resource getFulfilledResource(Resource resource) {
-        Resource.Builder builder = super.getFulfilledResource(resource).toBuilder();
+    protected Resource getFulfilledResource(Resource resource, boolean forceNewResource) {
+        Resource.Builder builder = super.getFulfilledResource(resource, forceNewResource).toBuilder();
         Optional<DiskInfo> diskInfo = getFulfilledDiskInfo(resource);
         if (diskInfo.isPresent()) {
             builder.setDisk(diskInfo.get());

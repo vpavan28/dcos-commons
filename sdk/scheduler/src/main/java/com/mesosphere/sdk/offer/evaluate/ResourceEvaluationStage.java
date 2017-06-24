@@ -69,7 +69,7 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
         final String resourceId = resourceRequirement.getResourceId();
         boolean resourceFound = false;
 
-        Resource fulfilledResource = getFulfilledResource(resourceRequirement.getResource());
+        Resource fulfilledResource = getFulfilledResource(resourceRequirement.getResource(), false);
         OfferRecommendation offerRecommendation = null;
         if (resourceRequirement.expectsResource()) {
             logger.info("Expects Resource");
@@ -82,6 +82,9 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
                             TextFormat.shortDebugString(resourceRequirement.getResource()));
                 } else {
                     logger.info("Expected non-persistent resource not found");
+                    // Force getting a new Resource so that we don't re-use the
+                    // resource Id
+                    fulfilledResource = getFulfilledResource(resourceRequirement.getResource(), true);
                 }
             } else {
 
@@ -128,7 +131,7 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
                             reserveResource = ResourceUtils.setResourceId(reserveResource, resourceId);
                             offerRecommendation = new ReserveOfferRecommendation(
                                     mesosResourcePool.getOffer(), reserveResource);
-                            fulfilledResource = getFulfilledResource(resourceRequirement.getResource());
+                            fulfilledResource = getFulfilledResource(resourceRequirement.getResource(), false);
                         } else {
                             return fail(this, "Insufficient resources to increase reservation of resource '%s'.",
                                     resourceRequirement.getName());
@@ -181,9 +184,9 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
         return null;
     }
 
-    protected Resource getFulfilledResource(Resource resource) {
+    protected Resource getFulfilledResource(Resource resource, boolean forceNewResource) {
         Resource.Builder builder = resource.toBuilder().setRole(getResourceRequirement().getRole());
-        Optional<Resource.ReservationInfo> reservationInfo = getFulfilledReservationInfo();
+        Optional<Resource.ReservationInfo> reservationInfo = getFulfilledReservationInfo(forceNewResource);
         if (reservationInfo.isPresent()) {
             builder.setReservation(reservationInfo.get());
         }
@@ -201,10 +204,10 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
         }
     }
 
-    protected Optional<Resource.ReservationInfo> getFulfilledReservationInfo() {
+    protected Optional<Resource.ReservationInfo> getFulfilledReservationInfo(boolean forceNewResource) {
         ResourceRequirement resourceRequirement = getResourceRequirement();
 
-        if (!resourceRequirement.reservesResource()) {
+        if (!resourceRequirement.reservesResource() && !forceNewResource) {
             return Optional.empty();
         } else {
             return Optional.of(Resource.ReservationInfo
