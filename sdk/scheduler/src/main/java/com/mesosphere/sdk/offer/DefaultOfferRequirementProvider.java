@@ -585,12 +585,23 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
     }
 
     private static Protos.ContainerInfo getContainerInfo(PodSpec podSpec, int podIndex) {
-        if (!podSpec.getImage().isPresent() && podSpec.getNetworks().isEmpty() && podSpec.getRLimits().isEmpty()) {
-            return null;
-        }
 
         Protos.ContainerInfo.Builder containerInfo = Protos.ContainerInfo.newBuilder()
                 .setType(Protos.ContainerInfo.Type.MESOS);
+
+        Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
+        if (!podSpec.getTasks().isEmpty()) {
+            for (TaskSpec task : podSpec.getTasks()) {
+                if (!task.getResourceSet().getVolumes().isEmpty()) {
+                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
+                }
+            }
+        }
+
+        if (!podSpec.getImage().isPresent() && podSpec.getNetworks().isEmpty() && podSpec.getRLimits().isEmpty() &&
+            addedVolumes.isEmpty()) {
+            return null;
+        }
 
         if (podSpec.getImage().isPresent()) {
             containerInfo.getMesosBuilder()
@@ -609,14 +620,6 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
             containerInfo.setRlimitInfo(getRLimitInfo(podSpec.getRLimits()));
         }
 
-        if (!podSpec.getTasks().isEmpty()) {
-            Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
-            for (TaskSpec task : podSpec.getTasks()) {
-                if (!task.getResourceSet().getVolumes().isEmpty()) {
-                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
-                }
-            }
-        }
         return containerInfo.build();
     }
 
