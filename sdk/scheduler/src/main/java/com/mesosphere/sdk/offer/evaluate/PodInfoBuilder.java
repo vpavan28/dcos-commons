@@ -545,6 +545,19 @@ public class PodInfoBuilder {
         Protos.ContainerInfo.Builder containerInfo = Protos.ContainerInfo.newBuilder()
                 .setType(Protos.ContainerInfo.Type.MESOS);
 
+        Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
+        if (!podSpec.getTasks().isEmpty()) {
+            for (TaskSpec task : podSpec.getTasks()) {
+                if (!task.getResourceSet().getVolumes().isEmpty()) {
+                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
+                }
+            }
+        }
+
+        if (!podSpec.getVolumes().isEmpty()) {
+            addDockerVolumes(containerInfo, podSpec.getVolumes(), podIndex, addedVolumes);
+        }
+
         if (!podSpec.getImage().isPresent()
                 && podSpec.getNetworks().isEmpty()
                 && podSpec.getRLimits().isEmpty()
@@ -577,15 +590,6 @@ public class PodInfoBuilder {
         if (addExtraParameters) {
             for (Protos.Volume secretVolume : secretVolumes) {
                 containerInfo.addVolumes(secretVolume);
-            }
-        }
-
-        if (!podSpec.getTasks().isEmpty()) {
-            Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
-            for (TaskSpec task : podSpec.getTasks()) {
-                if (!task.getResourceSet().getVolumes().isEmpty()) {
-                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
-                }
             }
         }
 
