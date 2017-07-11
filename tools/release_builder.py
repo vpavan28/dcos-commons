@@ -52,12 +52,13 @@ class UniverseReleaseBuilder(object):
         self._release_docker_image = release_docker_image or None
         self._beta_release = beta_release.lower() == 'true'
 
-        # complain early about any missing envvars...
-        # avoid uploading a bunch of stuff to prod just to error out later:
-        if 'GITHUB_TOKEN' not in os.environ:
-            raise Exception('GITHUB_TOKEN is required: Credential to create a PR against Universe')
-        encoded_tok = base64.encodestring(os.environ['GITHUB_TOKEN'].encode('utf-8'))
-        self._github_token = encoded_tok.decode('utf-8').rstrip('\n')
+        if not self._dry_run:
+            # complain early about any missing envvars...
+            # avoid uploading a bunch of stuff to prod just to error out later:
+            if 'GITHUB_TOKEN' not in os.environ:
+                raise Exception('GITHUB_TOKEN is required: Credential to create a PR against Universe')
+            encoded_tok = base64.encodestring(os.environ['GITHUB_TOKEN'].encode('utf-8'))
+            self._github_token = encoded_tok.decode('utf-8').rstrip('\n')
 
 
     def _run_cmd(self, cmd, exit_on_fail=True, dry_run_return=0):
@@ -264,7 +265,7 @@ class UniverseReleaseBuilder(object):
         # check out the repo, create a new local branch:
         ret = os.system(' && '.join([
             'cd {}'.format(scratchdir),
-            'git clone --depth 1 --branch version-3.x git@github.com:mesosphere/universe',
+            'git clone --depth 1 --branch version-3.x-px git@github.com:portworx/universe',
             'cd universe',
             'git config --local user.email jenkins@mesosphere.com',
             'git config --local user.name release_builder.py',
@@ -373,13 +374,13 @@ class UniverseReleaseBuilder(object):
             payload = {
                 'title': self._pr_title,
                 'head': branch,
-                'base': 'version-3.x',
+                'base': 'version-3.x-px',
                 'body': commitmsg_file.read()}
         conn = http.client.HTTPSConnection('api.github.com')
         conn.set_debuglevel(999)
         conn.request(
             'POST',
-            '/repos/mesosphere/universe/pulls',
+            '/repos/portworx/universe/pulls',
             body=json.dumps(payload).encode('utf-8'),
             headers=headers)
         return conn.getresponse()
