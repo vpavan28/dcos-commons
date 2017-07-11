@@ -4,7 +4,6 @@ scheduler:
 pods:
   journal:
     count: 3
-    image: python:2.7
     uris:
       - {{HDFS_URI}}
       - {{BOOTSTRAP_URI}}
@@ -51,7 +50,6 @@ pods:
           JOURNALNODE: true
   name:
     count: 2
-    image: python:2.7
     uris:
       - {{HDFS_URI}}
       - {{BOOTSTRAP_URI}}
@@ -209,7 +207,6 @@ pods:
           ZKFC: true
   data:
     count: {{DATA_COUNT}}
-    image: python:2.7
     uris:
       - {{HDFS_URI}}
       - {{BOOTSTRAP_URI}}

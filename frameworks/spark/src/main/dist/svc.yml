@@ -50,7 +50,6 @@ pods:
           SPARK_MASTER_WEBUI_PORT: {{SPARK_MASTER_WEBUI_PORT}}
   worker:
     count: {{WORKER_COUNT}}
-    image: python:2.7
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SPARK_URI}}
