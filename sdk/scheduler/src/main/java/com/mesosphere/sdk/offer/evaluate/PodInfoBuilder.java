@@ -418,15 +418,25 @@ public class PodInfoBuilder {
     private static Protos.ContainerInfo getContainerInfo(PodSpec podSpec, int podIndex, boolean addExtraParameters) {
         Collection<Protos.Volume> secretVolumes = getExecutorInfoSecretVolumes(podSpec.getSecrets());
 
+        Protos.ContainerInfo.Builder containerInfo = Protos.ContainerInfo.newBuilder()
+                .setType(Protos.ContainerInfo.Type.MESOS);
+
+        Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
+        if (!podSpec.getTasks().isEmpty()) {
+            for (TaskSpec task : podSpec.getTasks()) {
+                if (!task.getResourceSet().getVolumes().isEmpty()) {
+                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
+                }
+            }
+        }
+
         if (!podSpec.getImage().isPresent()
                 && podSpec.getNetworks().isEmpty()
                 && podSpec.getRLimits().isEmpty()
-                && secretVolumes.isEmpty()) {
+                && secretVolumes.isEmpty()
+                && addedVolumes.isEmpty()) {
             return null;
         }
-
-        Protos.ContainerInfo.Builder containerInfo = Protos.ContainerInfo.newBuilder()
-                .setType(Protos.ContainerInfo.Type.MESOS);
 
         if (podSpec.getImage().isPresent() && addExtraParameters) {
             containerInfo.getMesosBuilder()
@@ -448,15 +458,6 @@ public class PodInfoBuilder {
         if (addExtraParameters) {
             for (Protos.Volume secretVolume : secretVolumes) {
                 containerInfo.addVolumes(secretVolume);
-            }
-        }
-
-        if (!podSpec.getTasks().isEmpty()) {
-            Map<String, List<String>> addedVolumes = new HashMap<String, List<String>>();
-            for (TaskSpec task : podSpec.getTasks()) {
-                if (!task.getResourceSet().getVolumes().isEmpty()) {
-                    addDockerVolumes(containerInfo, task.getResourceSet().getVolumes(), podIndex, addedVolumes);
-                }
             }
         }
 
