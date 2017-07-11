@@ -4,7 +4,6 @@ scheduler:
 pods:
   kafka:
     count: {{BROKER_COUNT}}
-    image: python:2.7
     placement: {{PLACEMENT_CONSTRAINTS}}
     user: {{FRAMEWORK_USER}}
     uris:
