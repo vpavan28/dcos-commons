@@ -22,14 +22,21 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
         ENV_VARS.set("ETCD_MEM", "512");
         ENV_VARS.set("ETCD_DISK_TYPE", "ROOT");
         ENV_VARS.set("ETCD_DISK_SIZE", "5120");
+        ENV_VARS.set("ETCD_IMAGE", "mesosphere/etcd-mesos:latest");
+        ENV_VARS.set("ETCD_NODE_ADVERTISE_PORT", "1026");
+        ENV_VARS.set("ETCD_NODE_PEER_PORT", "1027");
+        ENV_VARS.set("ETCD_PROXY_ADVERTISE_PORT", "2379");
 
         ENV_VARS.set("INFLUXDB_CPUS", "0.1");
         ENV_VARS.set("INFLUXDB_MEM", "512");
         ENV_VARS.set("INFLUXDB_DISK_TYPE", "ROOT");
         ENV_VARS.set("INFLUXDB_DISK_SIZE", "1024");
+        ENV_VARS.set("INFLUXDB_IMAGE", "influxdb:latest");
 
         ENV_VARS.set("LIGHTHOUSE_CPUS", "0.1");
         ENV_VARS.set("LIGHTHOUSE_MEM", "512");
+        ENV_VARS.set("LIGHTHOUSE_WEBUI_PORT", "8085");
+        ENV_VARS.set("LIGHTHOUSE_IMAGE", "portworx/px-lighthouse:latest");
     }
 
     @Test
