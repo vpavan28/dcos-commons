@@ -4,7 +4,7 @@
   "version": "{{package-version}}",
   "maintainer": "support@mesosphere.io",
   "description": "Cassandra using the DC/OS SDK backed by Portworx volumes",
-  "selected": false,
+  "selected": true,
   "framework": true,
   "tags": [
     "cassandra"

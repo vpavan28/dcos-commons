@@ -9,8 +9,8 @@ pods:
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SCHEDULER_URI}}
-      - https://artifacts.elastic.co/downloads/kibana/kibana-{{ELASTIC_VERSION}}-linux-x86_64.tar.gz
-      - https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ELASTIC_VERSION}}.zip
+      - {{KIBANA_URI}}
+      - {{XPACK_URI}}
     container:
       rlimits:
         RLIMIT_NOFILE:
@@ -61,9 +61,9 @@ pods:
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SCHEDULER_URI}}
-      - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ELASTIC_VERSION}}.tar.gz
-      - https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ELASTIC_VERSION}}.zip
-      - https://github.com/elastic/elasticsearch-support-diagnostics/releases/download/{{SUPPORT_DIAGNOSTICS_VERSION}}/support-diagnostics-{{SUPPORT_DIAGNOSTICS_VERSION}}-dist.zip
+      - {{ELASTIC_URI}}
+      - {{XPACK_URI}}
+      - {{SUPPORT_DIAGS_URI}}
     container:
       rlimits:
         RLIMIT_NOFILE:
@@ -124,9 +124,9 @@ pods:
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SCHEDULER_URI}}
-      - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ELASTIC_VERSION}}.tar.gz
-      - https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ELASTIC_VERSION}}.zip
-      - https://github.com/elastic/elasticsearch-support-diagnostics/releases/download/{{SUPPORT_DIAGNOSTICS_VERSION}}/support-diagnostics-{{SUPPORT_DIAGNOSTICS_VERSION}}-dist.zip
+      - {{ELASTIC_URI}}
+      - {{XPACK_URI}}
+      - {{SUPPORT_DIAGS_URI}}
     container:
       rlimits:
         RLIMIT_NOFILE:
@@ -187,9 +187,9 @@ pods:
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SCHEDULER_URI}}
-      - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ELASTIC_VERSION}}.tar.gz
-      - https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ELASTIC_VERSION}}.zip
-      - https://github.com/elastic/elasticsearch-support-diagnostics/releases/download/{{SUPPORT_DIAGNOSTICS_VERSION}}/support-diagnostics-{{SUPPORT_DIAGNOSTICS_VERSION}}-dist.zip
+      - {{ELASTIC_URI}}
+      - {{XPACK_URI}}
+      - {{SUPPORT_DIAGS_URI}}
     container:
       rlimits:
         RLIMIT_NOFILE:
@@ -250,9 +250,9 @@ pods:
     uris:
       - {{BOOTSTRAP_URI}}
       - {{SCHEDULER_URI}}
-      - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ELASTIC_VERSION}}.tar.gz
-      - https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ELASTIC_VERSION}}.zip
-      - https://github.com/elastic/elasticsearch-support-diagnostics/releases/download/{{SUPPORT_DIAGNOSTICS_VERSION}}/support-diagnostics-{{SUPPORT_DIAGNOSTICS_VERSION}}-dist.zip
+      - {{ELASTIC_URI}}
+      - {{XPACK_URI}}
+      - {{SUPPORT_DIAGS_URI}}
     container:
       rlimits:
         RLIMIT_NOFILE:
@@ -310,7 +310,7 @@ pods:
           timeout: 10
   proxylite:
     container:
-      image-name: mesosphere/proxylite:1.0.1
+      image-name: {{PROXYLITE_IMAGE}}
     count: 1
     uris:
       - {{SCHEDULER_URI}}

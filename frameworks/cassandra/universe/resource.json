@@ -3,6 +3,7 @@
     "uris": {
       "jre-tar-gz": "{{jre-url}}",
       "libmesos-bundle-tar-gz": "{{libmesos-bundle-url}}",
+      "cassandra-tar-gz": "https://downloads.mesosphere.com/cassandra/assets/apache-cassandra-3.0.10-bin-dcos.tar.gz",
       "scheduler-zip": "{{artifact-dir}}/cassandra-scheduler.zip",
       "bootstrap-zip": "{{artifact-dir}}/bootstrap.zip",
       "executor-zip": "{{artifact-dir}}/executor.zip",

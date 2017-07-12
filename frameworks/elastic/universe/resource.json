@@ -5,7 +5,16 @@
       "libmesos-bundle-tar-gz": "{{libmesos-bundle-url}}",
       "executor-zip": "{{artifact-dir}}/executor.zip",
       "bootstrap-zip": "{{artifact-dir}}/bootstrap.zip",
-      "scheduler-zip": "{{artifact-dir}}/elastic-scheduler.zip"
+      "scheduler-zip": "{{artifact-dir}}/elastic-scheduler.zip",
+      "elastic-tar-gz": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.0.tar.gz",
+      "kibana-tar-gz": "https://artifacts.elastic.co/downloads/kibana/kibana-5.3.0-linux-x86_64.tar.gz",
+      "xpack-zip": "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.3.0.zip",
+      "support-diags-zip":"https://github.com/elastic/elasticsearch-support-diagnostics/releases/download/5.9/support-diagnostics-5.9-dist.zip"
+    },
+    "container": {
+      "docker": {
+        "proxylite": "mesosphere/proxylite:1.0.1"
+      }
     }
   },
   "images": {

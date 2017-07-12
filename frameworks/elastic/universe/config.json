@@ -367,6 +367,11 @@
           "description": "HTTP port for Proxylite to listen on.",
           "type": "integer",
           "default": 4040
+        },
+        "image": {
+          "description": "Container image to be used",
+          "type": "string",
+          "default": "mesosphere/proxylite:1.0.1"
         }
       },
       "required": [
