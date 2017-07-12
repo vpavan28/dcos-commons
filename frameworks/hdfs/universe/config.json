@@ -265,10 +265,10 @@
         "scheduler_min_allocation_mb",
         "scheduler_max_allocation_mb",
         "scheduler_min_allocation_vcores",
-        "scheduler_max_allocation_mb",
+        "scheduler_max_allocation_vcores",
         "nodemanager_memory_mb",
         "nodemanager_cpu_vcores"
-        ]
+      ]
     },
     "hdfs": {
       "type": "object",
