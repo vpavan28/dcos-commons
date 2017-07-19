@@ -86,6 +86,7 @@ public class VolumeEvaluationStage implements OfferEvaluationStage {
                             this,
                             volumeSpec,
                             resourceId,
+                            persistenceId,
                             mesosResourcePool);
             EvaluationOutcome evaluationOutcome = reserveEvaluationOutcome.getEvaluationOutcome();
             if (!evaluationOutcome.isPassing()) {

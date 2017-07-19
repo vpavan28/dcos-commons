@@ -234,7 +234,7 @@ class TaskResourceMapper {
             return new VolumeEvaluationStage(
                     (VolumeSpec) resourceSpec, taskSpecName, resourceId, persistenceId, useDefaultExecutor);
         } else {
-            return new ResourceEvaluationStage(resourceSpec, resourceId, taskSpecName);
+            return new ResourceEvaluationStage(resourceSpec, resourceId, persistenceId, taskSpecName);
         }
     }
 }

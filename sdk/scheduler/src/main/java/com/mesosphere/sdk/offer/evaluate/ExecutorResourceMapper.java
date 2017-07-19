@@ -187,7 +187,7 @@ public class ExecutorResourceMapper {
             return new VolumeEvaluationStage(
                     (VolumeSpec) resourceSpec, null, resourceId, persistenceId, useDefaultExecutor);
         } else {
-            return new ResourceEvaluationStage(resourceSpec, resourceId, null);
+            return new ResourceEvaluationStage(resourceSpec, resourceId, persistenceId, null);
         }
     }
 }
