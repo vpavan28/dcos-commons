@@ -52,7 +52,8 @@ class OfferEvaluationUtils {
             Optional<String> persistenceId,
             MesosResourcePool mesosResourcePool) {
 
-        Optional<MesosResource> mesosResourceOptional = consume(resourceSpec, resourceId, persistenceId, mesosResourcePool);
+        Optional<MesosResource> mesosResourceOptional = consume(resourceSpec, resourceId, persistenceId,
+                mesosResourcePool);
         if (!mesosResourceOptional.isPresent()) {
             return new ReserveEvaluationOutcome(
                     fail(
@@ -73,7 +74,7 @@ class OfferEvaluationUtils {
                     TextFormat.shortDebugString(mesosResource.getValue()),
                     TextFormat.shortDebugString(resourceSpec.getValue()));
 
-            if (!resourceId.isPresent() || !resourceId.equals(mesosResource.getResourceId()) ) {
+            if (!resourceId.isPresent() || !resourceId.equals(mesosResource.getResourceId())) {
                 resourceId = mesosResource.getResourceId();
                 // Initial reservation of resources
                 LOGGER.info("    Resource '{}' requires a RESERVE operation", resourceSpec.getName());
@@ -230,7 +231,8 @@ class OfferEvaluationUtils {
                     resourceSpec.getValue(),
                     resourceSpec.getPreReservedRole());
         } else {
-            Optional<MesosResource> mesosResource = pool.consumeReserved(resourceSpec.getName(), resourceSpec.getValue(), resourceId.get());
+            Optional<MesosResource> mesosResource = pool.consumeReserved(resourceSpec.getName(),
+                    resourceSpec.getValue(), resourceId.get());
             // If we didn't get back an expected resource and it isn't
             // persistent, try to get an unreserved resource
             if (!mesosResource.isPresent() && !persistenceId.isPresent()) {
