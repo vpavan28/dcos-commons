@@ -40,7 +40,11 @@ def validate_uris_in(file_name):
     bad_uri = False
     for uri in uris:
         # A FQDN is a valid internal FQDN if it contains .dcos or ends with .mesos.
-        if not (".dcos" in uri or uri.endswith(".mesos")):
+        # Also ignore common local IPs and anything that uses FRAMEWORK_HOST to
+        # locate other pods
+        if not (".dcos" in uri or ".mesos" in uri or "FRAMEWORK_HOST" in uri or
+                uri.startswith("localhost") or uri.startswith("127.0.0.1") or
+                uri.startswith("0.0.0.0")):
             print("Found a bad URI:", uri, "in:", file_name)
             bad_uri = True
 
