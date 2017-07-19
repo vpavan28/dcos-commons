@@ -24,8 +24,8 @@ public class ResourceEvaluationStage implements OfferEvaluationStage {
      * @param requiredResourceId any previously reserved resource ID to be required, or empty for a new reservation
      * @param taskName the name of the task which will use this resource
      */
-    public ResourceEvaluationStage(ResourceSpec resourceSpec, Optional<String> requiredResourceId, Optional<String> persistenceId,
-            String taskName) {
+    public ResourceEvaluationStage(ResourceSpec resourceSpec, Optional<String> requiredResourceId,
+            Optional<String> persistenceId, String taskName) {
         this.resourceSpec = resourceSpec;
         this.requiredResourceId = requiredResourceId;
         this.taskName = taskName;
