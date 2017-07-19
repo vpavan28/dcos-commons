@@ -238,7 +238,7 @@ class TaskResourceMapper {
         } else if (resourceSpec instanceof VolumeSpec) {
             return new VolumeEvaluationStage((VolumeSpec) resourceSpec, taskSpecName, resourceId, persistenceId);
         } else {
-            return new ResourceEvaluationStage(resourceSpec, resourceId, taskSpecName);
+            return new ResourceEvaluationStage(resourceSpec, resourceId, persistenceId, taskSpecName);
         }
     }
 }

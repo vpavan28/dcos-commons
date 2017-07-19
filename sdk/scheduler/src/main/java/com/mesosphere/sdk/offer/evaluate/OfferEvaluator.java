@@ -264,7 +264,8 @@ public class OfferEvaluator {
                     PortSpec portSpec = (PortSpec) resourceSpec;
                     evaluationStages.add(new PortEvaluationStage(portSpec, taskName, Optional.empty()));
                 } else {
-                    evaluationStages.add(new ResourceEvaluationStage(resourceSpec, Optional.empty(), taskName));
+                    evaluationStages.add(new ResourceEvaluationStage(resourceSpec, Optional.empty(), Optional.empty(),
+                                taskName));
                 }
             }
 
