@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/portworx/dcos-commons.svg?branch=master)](https://travis-ci.org/portworx/dcos-commons)
+[![Build Status](https://travis-ci.org/portworx/dcos-commons.svg?branch=px_c9a6d4a)](https://travis-ci.org/portworx/dcos-commons)
 
 
 <p align="left">
