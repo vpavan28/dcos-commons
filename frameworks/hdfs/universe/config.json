@@ -18,7 +18,7 @@
         "user": {
           "type": "string",
           "description": "The linux user used to run the scheduler and all executors.",
-          "default": "nobody"
+          "default": "root"
         },
         "principal" : {
           "description":"The principal for the HDFS service instance.",
