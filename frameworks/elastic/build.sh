@@ -43,11 +43,11 @@ BUILD_DIR=$FRAMEWORK_DIR/build/distributions
 PUBLISH_STEP=${1-none}
 
 if [ x"$cli_only" = xtrue ]; then
-    ${ROOT_DIR}/tools/build_framework.sh --cli-only $PUBLISH_STEP elastic-portworx $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/elastic-scheduler.zip
+    ${ROOT_DIR}/tools/build_framework.sh --cli-only $PUBLISH_STEP portworx-elastic $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/elastic-scheduler.zip
     exit $?
 fi
 
-${ROOT_DIR}/tools/build_framework.sh $PUBLISH_STEP elastic-portworx $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/elastic-scheduler.zip
+${ROOT_DIR}/tools/build_framework.sh $PUBLISH_STEP portworx-elastic $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/elastic-scheduler.zip
 
 # capture anonymous metrics for reporting
 curl https://mesosphere.com/wp-content/themes/mesosphere/library/images/assets/sdk/build-sh-finish.png >/dev/null 2>&1

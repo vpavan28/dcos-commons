@@ -43,4 +43,4 @@ if [ x"$cli_only" = xtrue ]; then
     cli_flag=--cli-only
 fi
 
-${ROOT_DIR}/tools/build_framework.sh $cli_flag $PUBLISH_STEP kafka-portworx $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/kafka-scheduler.zip
+${ROOT_DIR}/tools/build_framework.sh $cli_flag $PUBLISH_STEP portworx-kafka $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/kafka-scheduler.zip
