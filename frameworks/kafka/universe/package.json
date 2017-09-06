@@ -3,13 +3,13 @@
   "minDcosReleaseVersion": "1.8",
   "name": "kafka-portworx",
   "version": "{{package-version}}",
-  "maintainer": "support@mesosphere.io",
+  "maintainer": "support@portworx.com",
   "description": "Apache Kafka",
-  "selected": true,
+  "selected": false,
   "framework": true,
   "tags": ["message", "broker", "kafka", "pubsub", "portworx"],
-  "preInstallNotes": "This DC/OS Service is currently a beta candidate undergoing testing as part of a formal beta test program.\n\nThere may be bugs, incomplete features, incorrect documentation, or other discrepancies.\n\nDefault configuration requires 3 agent nodes each with: 1.0 CPU | 2048 MB MEM | 1 5000 MB Disk\n\nContact Mesosphere before deploying this beta candidate service. Product support is available to approved participants in the beta test program.",
-  "postInstallNotes": "DC/OS Apache Kafka Service is being installed.\n\n\tDocumentation: https://docs.mesosphere.com/current/usage/service-guides/kafka\n\tIssues: https://dcosjira.atlassian.net/projects/KAFKA/issues",
-  "postUninstallNotes": "DC/OS Apache Kafka Service is being uninstalled.\nPlease follow the instructions at https://docs.mesosphere.com/current/usage/service-guides/kafka/uninstall to remove any persistent state if required."
+  "preInstallNotes": "Community packages are unverified and unreviewed content from the community.\n\nDefault configuration requires 3 agent nodes each with: 1.0 CPU | 2048 MB MEM\n\nContact Mesosphere before deploying this beta candidate service. Product support is available to approved participants in the beta test program.",
+  "postInstallNotes": "DC/OS Apache Kafka Service is being installed.\n\n\tDocumentation: https://docs.portworx.com/scheduler/mesosphere-dcos/kafka.html",
+  "postUninstallNotes": "DC/OS Apache Kafka Service is being uninstalled.\nPlease follow the instructions at https://docs.portworx.com/scheduler/mesosphere-dcos/framework_cleanup.html to remove any persistent state if required."
 }
 
