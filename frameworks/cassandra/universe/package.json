@@ -3,12 +3,12 @@
   "minDcosReleaseVersion": "1.9",
   "name": "cassandra-px",
   "version": "{{package-version}}",
-  "maintainer": "support@mesosphere.io",
+  "maintainer": "support@portworx.com",
   "description": "Apache Cassandra backed by Portworx volumes",
-  "selected": true,
+  "selected": false,
   "framework": true,
-  "tags": ["cassandra"],
-  "preInstallNotes": "Default configuration requires 3 agent nodes each with: 0.5 CPU | 4096 MB MEM | 1 10240 MB Disk",
-  "postInstallNotes": "DC/OS Cassandra is being installed!\n\n\tDocumentation: {{documentation-path}}\n\tIssues: {{issues-path}}",
-  "postUninstallNotes": "DC/OS cassandra is being uninstalled."
+  "tags": ["cassandra", "portworx"],
+  "preInstallNotes": "Community packages are unverified and unreviewed content from the community.\n\nDefault configuration requires 3 agent nodes each with: 0.5 CPU | 4096 MB MEM",
+  "postInstallNotes": "DC/OS Cassandra is being installed!\n\n\tDocumentation: https://docs.portworx.com/scheduler/mesosphere-dcos/cassandra.html",
+  "postUninstallNotes": "DC/OS cassandra is being uninstalled.\nPlease follow the instructions at https://docs.portworx.com/scheduler/mesosphere-dcos/framework_cleanup.html to remove any persistent state if required."
 }
