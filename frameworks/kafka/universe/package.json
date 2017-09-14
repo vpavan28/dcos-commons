@@ -1,10 +1,10 @@
 {
   "packagingVersion": "4.0",
   "minDcosReleaseVersion": "1.9",
-  "name": "portworx-kafka",
+  "name": "portworx-confluent-kafka",
   "version": "{{package-version}}",
   "maintainer": "support@portworx.com",
-  "description": "Apache Kafka",
+  "description": "Confluent Kafka framework running on DC/OS backed by Portworx volumes",
   "selected": false,
   "framework": true,
   "tags": ["message", "broker", "kafka", "pubsub", "portworx"],

@@ -6,9 +6,9 @@
         "description": "DC/OS service configuration properties",
         "properties": {
           "name" : {
-            "description": "Apache Kafka",
+            "description": "Confluent Kafka",
             "type": "string",
-            "default": "portworx-kafka"
+            "default": "portworx-confluent-kafka"
           },
           "mesos_api_version" : {
             "description": "Configures the Mesos API version to use. Possible values: V0 (non-HTTP), V1 (HTTP)",
