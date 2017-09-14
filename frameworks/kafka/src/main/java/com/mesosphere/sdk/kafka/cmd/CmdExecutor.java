@@ -43,7 +43,7 @@ public class CmdExecutor {
           --replication-factor 3
          */
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-topics.sh");
+        cmd.add(binPath + "kafka-topics");
         cmd.add("--create");
         cmd.add("--zookeeper");
         cmd.add(zkPath);
@@ -62,7 +62,7 @@ public class CmdExecutor {
          e.g. ./kafka-topics.sh --delete --zookeeper master.mesos:2181/kafka --topic topic0
          */
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-topics.sh");
+        cmd.add(binPath + "kafka-topics");
         cmd.add("--delete");
         cmd.add("--zookeeper");
         cmd.add(zkPath);
@@ -77,7 +77,7 @@ public class CmdExecutor {
         e.g. ./kafka-topics.sh --zookeeper master.mesos:2181/kafka --alter --topic topic0 --partitions 4
         */
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-topics.sh");
+        cmd.add(binPath + "kafka-topics");
         cmd.add("--alter");
         cmd.add("--zookeeper");
         cmd.add(zkPath);
@@ -99,7 +99,7 @@ public class CmdExecutor {
         String bootstrapServers = "bootstrap.servers=" + brokers;
 
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-producer-perf-test.sh");
+        cmd.add(binPath + "kafka-producer-perf-test");
         cmd.add("--topic");
         cmd.add(topicName);
         cmd.add("--num-records");
@@ -125,7 +125,7 @@ public class CmdExecutor {
         String brokers = StringUtils.join(brokerEndpoints, ",");
 
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-run-class.sh");
+        cmd.add(binPath + "kafka-run-class");
         cmd.add("kafka.tools.GetOffsetShell");
         cmd.add("--topic");
         cmd.add(topicName);
@@ -143,7 +143,7 @@ public class CmdExecutor {
         // e.g. ./kafka-topics.sh --zookeeper master.mesos:2181/kafka --describe --unavailable-partitions
 
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-topics.sh");
+        cmd.add(binPath + "kafka-topics");
         cmd.add("--describe");
         cmd.add("--zookeeper");
         cmd.add(zkPath);
@@ -156,7 +156,7 @@ public class CmdExecutor {
         // e.g. ./kafka-topics.sh --zookeeper master.mesos:2181/kafka --describe --under-replicate-partitions
 
         List<String> cmd = new ArrayList<String>();
-        cmd.add(binPath + "kafka-topics.sh");
+        cmd.add(binPath + "kafka-topics");
         cmd.add("--describe");
         cmd.add("--zookeeper");
         cmd.add(zkPath);

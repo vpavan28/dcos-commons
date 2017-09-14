@@ -34,11 +34,11 @@ pods:
           KAFKA_DISK_PATH: "{{BROKER_DISK_PATH}}"
           KAFKA_HEAP_OPTS: "-Xms{{BROKER_JAVA_HEAP}}M -Xmx{{BROKER_JAVA_HEAP}}M"
         goal: RUNNING
-        cmd: "./bootstrap -resolve=false && exec $MESOS_SANDBOX/{{KAFKA_VERSION_PATH}}/bin/kafka-server-start.sh $MESOS_SANDBOX/{{KAFKA_VERSION_PATH}}/config/server.properties"
+        cmd: "./bootstrap -resolve=false && exec $MESOS_SANDBOX/{{KAFKA_VERSION_PATH}}/bin/kafka-server-start $MESOS_SANDBOX/{{KAFKA_VERSION_PATH}}/etc/kafka/server.properties"
         configs:
           server-properties:
             template: "{{CONFIG_TEMPLATE_PATH}}/server.properties.mustache"
-            dest: "{{KAFKA_VERSION_PATH}}/config/server.properties"
+            dest: "{{KAFKA_VERSION_PATH}}/etc/kafka/server.properties"
 plans:
   deploy:
     strategy: serial
