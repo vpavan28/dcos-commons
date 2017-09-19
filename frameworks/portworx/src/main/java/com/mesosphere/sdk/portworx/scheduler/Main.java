@@ -1,5 +1,6 @@
 package com.mesosphere.sdk.portworx.scheduler;
 
+import com.mesosphere.sdk.config.validate.TaskEnvCannotChange;
 import com.mesosphere.sdk.portworx.api.*;
 import com.mesosphere.sdk.scheduler.DefaultScheduler;
 import com.mesosphere.sdk.scheduler.SchedulerFlags;
@@ -26,6 +27,10 @@ public class Main {
         DefaultScheduler.Builder schedulerBuilder = DefaultScheduler.newBuilder(
                 DefaultServiceSpec.newGenerator(rawServiceSpec, schedulerFlags).build(),
                 schedulerFlags)
+                .setCustomConfigValidators(Arrays.asList(
+                        new TaskEnvCannotChange("etcd-cluster", "node", "ETCD_ENABLED"),
+                        new TaskEnvCannotChange("etcd-proxy", "node", "ETCD_ENABLED"),
+                        new TaskEnvCannotChange("lighthouse", "start", "LIGHTHOUSE_ENABLED")))
                 .setPlansFrom(rawServiceSpec);
 
         schedulerBuilder.setCustomResources(getResources(schedulerBuilder.getServiceSpec()));
