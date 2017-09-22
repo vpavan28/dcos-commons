@@ -8,7 +8,7 @@
           "name" : {
             "description": "Apache Kafka",
             "type": "string",
-            "default": "kafka"
+            "default": "portworx-kafka"
           },
           "mesos_api_version" : {
             "description": "Configures the Mesos API version to use. Possible values: V0 (non-HTTP), V1 (HTTP)",

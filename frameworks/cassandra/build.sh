@@ -45,7 +45,7 @@ if [ x"$cli_only" = xtrue ]; then
     exit $?
 fi
 
-${ROOT_DIR}/tools/build_framework.sh $PUBLISH_STEP cassandra $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/cassandra-scheduler.zip
+${ROOT_DIR}/tools/build_framework.sh $PUBLISH_STEP portworx-cassandra $FRAMEWORK_DIR $BUILD_DIR/executor.zip $BUILD_DIR/cassandra-scheduler.zip
 
 # capture anonymous metrics for reporting
 curl https://mesosphere.com/wp-content/themes/mesosphere/library/images/assets/sdk/build-sh-finish.png >/dev/null 2>&1
