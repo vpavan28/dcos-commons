@@ -20,23 +20,23 @@
     "binaries":{
       "darwin":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-hdfs-darwin}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-hadoop-darwin}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-hdfs-darwin"
+          "url":"{{artifact-dir}}/dcos-portworx-hadoop-darwin"
         }
       },
       "linux":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-hdfs-linux}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-hadoop-linux}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-hdfs-linux"
+          "url":"{{artifact-dir}}/dcos-portworx-hadoop-linux"
         }
       },
       "windows":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-hdfs.exe}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-hadoop.exe}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-hdfs.exe"
+          "url":"{{artifact-dir}}/dcos-portworx-hadoop.exe"
         }
       }
     }
