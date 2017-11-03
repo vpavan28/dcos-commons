@@ -97,14 +97,18 @@ pods:
                 systemctl enable portworx && 
                 systemctl start portworx
 
-      restart:
+      upgrade:
         goal: FINISHED
         resource-set: px-resources
         cmd: >
+             docker run --entrypoint /runc-entry-point.sh \
+                --rm -i --privileged=true \
+                -v /opt/pwx:/opt/pwx -v /etc/pwx:/etc/pwx \
+                {{{PORTWORX_IMAGE_NAME}}} --upgrade
+
              systemctl daemon-reload && systemctl restart portworx
 
              while ! /opt/pwx/bin/pxctl status ; do sleep 5 ;  done
-
 
   etcd-cluster:
     user: {{SERVICE_USER}}
@@ -238,11 +242,11 @@ plans:
         pod: portworx
         steps:
           - default : [[install]]
-  restart-portworx:
+  upgrade-portworx:
     strategy: serial
     phases:
-      portworx-restart:
+      upgrade:
         strategy: serial
         pod: portworx
         steps:
-          - default : [[restart]]
+          - default : [[upgrade]]
