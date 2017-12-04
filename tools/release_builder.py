@@ -262,10 +262,8 @@ class UniverseReleaseBuilder(object):
         # check out the repo, create a new local branch:
         ret = os.system(' && '.join([
             'cd {}'.format(scratchdir),
-            'git clone --depth 1 --branch version-3.x-px git@github.com:portworx/universe',
+            'git clone --depth 1 --branch version-3.x git@github.com:portworx/universe',
             'cd universe',
-            'git config --local user.email jenkins@mesosphere.com',
-            'git config --local user.name release_builder.py',
             'git checkout -b {}'.format(branch)]))
         if ret != 0:
             raise Exception(
@@ -371,7 +369,7 @@ class UniverseReleaseBuilder(object):
             payload = {
                 'title': self._pr_title,
                 'head': branch,
-                'base': 'version-3.x-px',
+                'base': 'version-3.x',
                 'body': commitmsg_file.read()}
         conn = http.client.HTTPSConnection('api.github.com')
         conn.set_debuglevel(999)
