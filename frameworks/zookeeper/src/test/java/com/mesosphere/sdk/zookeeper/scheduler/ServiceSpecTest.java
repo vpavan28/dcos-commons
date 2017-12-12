@@ -18,6 +18,8 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
 
                 "ZOOKEEPER_VERSION", "3.4.11",
                 "TASKCFG_ALL_ZOOKEEPER_CLIENT_PORT", "2182",
+                "TASKCFG_ALL_LEADER_PORT", "2889",
+                "TASKCFG_ALL_LEADER_ELECTION_PORT", "3889",
 
                 "NODE_COUNT", "3",
                 "NODE_CPUS", "0.1",
