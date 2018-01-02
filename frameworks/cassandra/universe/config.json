@@ -116,7 +116,7 @@
         "placement_constraint": {
           "type": "string",
           "description": "The Marathon-style placement constraint string controlling node placement",
-          "default": "hostname:MAX_PER:1"
+          "default": ""
         },
         "heap": {
           "type": "object",
