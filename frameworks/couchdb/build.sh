@@ -49,7 +49,7 @@ fi
 COUCHDB_DOCUMENTATION_PATH="http://YOURNAMEHERE.COM/DOCS" \
 COUCHDB_ISSUES_PATH="http://YOURNAMEHERE.COM/SUPPORT" \
     ${ROOT_DIR}/tools/build_framework.sh $cli_flag $PUBLISH_STEP \
-        couchdb \
+        portworx-couchdb \
         $FRAMEWORK_DIR \
         $BUILD_DIR/executor.zip \
         $BUILD_DIR/couchdb-scheduler.zip

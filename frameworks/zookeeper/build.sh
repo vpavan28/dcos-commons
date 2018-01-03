@@ -49,7 +49,7 @@ fi
 ZOOKEEPER_DOCUMENTATION_PATH="http://YOURNAMEHERE.COM/DOCS" \
 ZOOKEEPER_ISSUES_PATH="http://YOURNAMEHERE.COM/SUPPORT" \
     ${ROOT_DIR}/tools/build_framework.sh $cli_flag $PUBLISH_STEP \
-        zookeeper \
+        portworx-zookeeper \
         $FRAMEWORK_DIR \
         $BUILD_DIR/executor.zip \
         $BUILD_DIR/zookeeper-scheduler.zip

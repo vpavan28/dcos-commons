@@ -18,23 +18,23 @@
     "binaries":{
       "darwin":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-zookeeper-darwin}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-zookeeper-darwin}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-zookeeper-darwin"
+          "url":"{{artifact-dir}}/dcos-portworx-zookeeper-darwin"
         }
       },
       "linux":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-zookeeper-linux}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-zookeeper-linux}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-zookeeper-linux"
+          "url":"{{artifact-dir}}/dcos-portworx-zookeeper-linux"
         }
       },
       "windows":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-zookeeper.exe}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-zookeeper.exe}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-zookeeper.exe"
+          "url":"{{artifact-dir}}/dcos-portworx-zookeeper.exe"
         }
       }
     }

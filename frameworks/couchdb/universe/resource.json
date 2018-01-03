@@ -21,23 +21,23 @@
     "binaries":{
       "darwin":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-couchdb-darwin}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-couchdb-darwin}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-couchdb-darwin"
+          "url":"{{artifact-dir}}/dcos-portworx-couchdb-darwin"
         }
       },
       "linux":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-couchdb-linux}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-couchdb-linux}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-couchdb-linux"
+          "url":"{{artifact-dir}}/dcos-portworx-couchdb-linux"
         }
       },
       "windows":{
         "x86-64":{
-          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-couchdb.exe}}" } ],
+          "contentHash":[ { "algo":"sha256", "value":"{{sha256:dcos-portworx-couchdb.exe}}" } ],
           "kind":"executable",
-          "url":"{{artifact-dir}}/dcos-couchdb.exe"
+          "url":"{{artifact-dir}}/dcos-portworx-couchdb.exe"
         }
       }
     }
