@@ -20,6 +20,7 @@ public class ServiceSpecTest extends BaseServiceSpecTest {
                 "HELLO_CPUS", "0.1",
                 "HELLO_MEM", "512",
                 "HELLO_DISK", "5000",
+                "HELLO_DOCKER_VOLUME_NAME", "helloVolume",
 
                 "WORLD_COUNT", "3",
                 "WORLD_CPUS", "0.2",
