@@ -104,6 +104,7 @@ public class PlansResource extends PrettyJsonResource {
             Plan plan = planManagerOptional.get().getPlan();
             plan.updateParameters(parameters);
             if (plan.isComplete()) {
+                plan.interrupt();
                 plan.restart();
             }
 
